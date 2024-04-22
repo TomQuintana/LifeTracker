@@ -1,0 +1,4 @@
+.libraries/
+.env
+notes.md
+__pycache__/
