@@ -14,6 +14,3 @@ class Expense(SQLModel, table = True):
     type: str | None = None
     coutes: int | None = None
     date: str
-
-    def __repr__(self) -> str:
-        return f"Book => {self.title}"

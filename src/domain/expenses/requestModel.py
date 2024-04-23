@@ -7,6 +7,7 @@ class ExpenseRequest(BaseModel):
     """
     name: str
     price_ARS: int
+    price_USDT:( float | None ) = None
     date: str
     type: ( str | None ) = None
     coutes: ( str | None ) = None
