@@ -1,4 +1,5 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlmodel import select
 
 from ..domain.expenses.model import Expense
 from ..domain.expenses.requestModel import ExpenseRequest
@@ -23,3 +24,25 @@ class ExpenseService:
         await self.session.commit()
 
         return new_expense
+
+    #TODO: define type of data
+    async def _obtatin_total(self, data) -> dict[str, float]:
+        total_spend_ars = 0
+        total_spend_usdt = 0
+
+        for spend_data in data:
+            total_spend_ars += spend_data.price_ARS
+            #total_spend_usdt += spend_data.price_USDT
+
+        data_reponse = {
+            "Total Spend in ARS": total_spend_ars,
+            "Total Spend in USDT": total_spend_usdt,
+        }
+
+        return data_reponse
+
+
+    async def calculate_total(self):
+        statament = select(Expense)
+        data = await self.session.exec(statament)
+        return await self._obtatin_total(data)
