@@ -1,5 +1,5 @@
-from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from ..domain.expenses.model import Expense
 from ..domain.expenses.requestModel import ExpenseRequest
@@ -12,9 +12,11 @@ class ExpenseService:
 
     async def create_expense(self, expense_data: ExpenseRequest):
 
-        crypto_currency = 'USDT'
+        crypto_currency = "USDT"
         cotization_service = Cotization(crypto_currency)
-        cotization = await cotization_service.calculate_cotization(expense_data.price_ARS)
+        cotization = await cotization_service.calculate_cotization(
+            expense_data.price_ARS
+        )
 
         new_expense = Expense(**expense_data.model_dump())
         new_expense.price_USDT = cotization
@@ -25,14 +27,14 @@ class ExpenseService:
 
         return new_expense
 
-    #TODO: define type of data
+    # TODO: define type of data
     async def _obtatin_total(self, data) -> dict[str, float]:
         total_spend_ars = 0
         total_spend_usdt = 0
 
         for spend_data in data:
             total_spend_ars += spend_data.price_ARS
-            #total_spend_usdt += spend_data.price_USDT
+            # total_spend_usdt += spend_data.price_USDT
 
         data_reponse = {
             "Total Spend in ARS": total_spend_ars,
@@ -40,7 +42,6 @@ class ExpenseService:
         }
 
         return data_reponse
-
 
     async def calculate_total(self):
         statament = select(Expense)

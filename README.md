@@ -5,14 +5,17 @@
 
 <div align="center">
 
- ## Project technologies 
+## Project technologies
+
 [![Python](https://img.shields.io/badge/Python-3178C6?style=for-the-badge&logo=python&logoColor=white&labelColor=101010)]()
 [![FastApi](https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=fastapi&logoColor=white&labelColor=101010)]()
 [![FastApi](https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white&labelColor=101010)]()
 [![FastApi](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white&labelColor=101010)]()
+
 </div>
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Features](#features)
 3. [Documentation Endpoints](#documentation-endpoints)
@@ -21,9 +24,18 @@
 6. [How to work in this project](#how-to-work-in-this-project)
 
 # Features
-## Spends 
+
+## Spends
+
 - Add new spend
 - Obtain all data of spends
 
+# Usage
+
+### Set up database
+
+- execute a terminal `docker compose up -d` for create a postgres database
+
 # Documentation Endpoints
+
 For see a different curl endpoints go to - `http://localhost:3000/docs`

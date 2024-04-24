@@ -1,12 +1,13 @@
-from sqlmodel import SQLModel, Field, Column
-import sqlalchemy.dialects.postgresql as pg
 from uuid import UUID, uuid4
 
+import sqlalchemy.dialects.postgresql as pg
+from sqlmodel import Column, Field, SQLModel
 
-class Expense(SQLModel, table = True):
-    __tablename__= 'expenses'
+
+class Expense(SQLModel, table=True):
+    __tablename__ = "expenses"
     uuid: UUID = Field(
-        sa_column= Column(pg.UUID, primary_key=True, unique=True, default=uuid4)
+        sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4)
     )
     name: str
     price_ARS: float
