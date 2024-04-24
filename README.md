@@ -1,6 +1,6 @@
-<h4 align="center">
+<h2 align="center">
     This project consist in life tracker for manage my spends. 
-</h4>
+</h2>
 <h5 align="center">In the future I have a implement an interface but for now its only a backend</h5>
 
 <div align="center">
@@ -21,21 +21,24 @@
 3. [Documentation Endpoints](#documentation-endpoints)
 4. [Usage](#usage)
 5. [Folder Structure](#folder-structure)
-6. [How to work in this project](#how-to-work-in-this-project)
 
-# Features
+## Features
 
-## Spends
+### Spends
 
 - Add new spend
 - Obtain all data of spends
 
-# Usage
+## Usage
+- Generate a virtual enviroment by `python3 -m venv <name>`
+- Activate enviroment ` source .<name>/bin/activate`
+- Then install a necesary package in your enviroment using `pip install -r requirements.txt`
+- For the last run a server with `python3 runserver` in port 3000
 
 ### Set up database
 
 - execute a terminal `docker compose up -d` for create a postgres database
 
-# Documentation Endpoints
+## Documentation Endpoints
 
 For see a different curl endpoints go to - `http://localhost:3000/docs`
