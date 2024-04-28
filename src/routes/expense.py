@@ -29,3 +29,9 @@ async def create_expense(
 async def get_total(expense_service=Depends(dependency_manager.get_expense_service)):
     total_response = await expense_service.calculate_total()
     return total_response
+
+@router.get("/data", status_code=HTTPStatus.OK)
+async def get_data(expense_service=Depends(dependency_manager.get_expense_service)):
+    data_spend = await expense_service.obtain_data()
+    return data_spend
+

@@ -47,3 +47,22 @@ class ExpenseService:
         statament = select(Expense)
         data = await self.session.exec(statament)
         return await self._obtatin_total(data)
+
+    def process_data(self, data):
+        data_reponse = []
+        for formatted_data in data:
+            data_list = {
+                "name": formatted_data.name,
+                "price_ARS": formatted_data.price_ARS,
+                "price_USDT": formatted_data.price_USDT,
+                "type": formatted_data.type,
+                "date": formatted_data.date,
+            }
+
+            data_reponse.append(data_list)
+        return data_reponse
+
+    async def obtain_data(self):
+        statament = select(Expense)  # NOTE: improve statament for dont get uuid
+        data = await self.session.exec(statament)
+        return self.process_data(data)
