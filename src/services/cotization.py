@@ -10,7 +10,6 @@ class Cotization:
         self.crypto_currency = crypto_currency
 
     async def _obtain(self) -> float | None:
-
         url = "https://min-api.cryptocompare.com/data/pricemultifull"
         params = {"fsyms": self.crypto_currency, "tsyms": "ARS"}
 

@@ -6,9 +6,7 @@ from sqlmodel import Column, Field, SQLModel
 
 class Expense(SQLModel, table=True):
     __tablename__ = "expenses"
-    uuid: UUID = Field(
-        sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4)
-    )
+    uuid: UUID = Field(sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4))
     name: str
     price_ARS: float
     price_USDT: float | None = None

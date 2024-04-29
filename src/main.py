@@ -13,5 +13,6 @@ async def lifespan(app: FastAPI):
     yield
     print("server is shutting down")
 
-app = FastAPI(title='Life Tracker', lifespan=lifespan)
+
+app = FastAPI(title="Life Tracker", lifespan=lifespan)
 app.include_router(expense_router)

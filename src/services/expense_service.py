@@ -11,12 +11,9 @@ class ExpenseService:
         self.session = session
 
     async def create_expense(self, expense_data: ExpenseRequest):
-
         crypto_currency = "USDT"
         cotization_service = Cotization(crypto_currency)
-        cotization = await cotization_service.calculate_cotization(
-            expense_data.price_ARS
-        )
+        cotization = await cotization_service.calculate_cotization(expense_data.price_ARS)
 
         new_expense = Expense(**expense_data.model_dump())
         new_expense.price_USDT = cotization
