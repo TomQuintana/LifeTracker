@@ -10,7 +10,6 @@ class ExpenseRequest(BaseModel):
     name: str
     price_ARS: int
     price_USDT: float | None = None
-    date: str
     type: str | None = None
     coutes: str | None = None
 
@@ -19,7 +18,6 @@ class ExpenseRequest(BaseModel):
             "example": {
                 "name": "Lapicera Uniball",
                 "price_ARS": 20,
-                "date": "15-05-2024",
             }
         }
     }
