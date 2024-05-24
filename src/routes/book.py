@@ -13,3 +13,17 @@ async def create_user(book: BookRequest, session: AsyncSession = Depends(get_ses
     book_service = BookService(session)
     book_created = await book_service.create_book(book)
     return book_created
+
+
+@router.get("/data", status_code=status.HTTP_200_OK)
+async def get_books(session: AsyncSession = Depends(get_session)):
+    book_service = BookService(session)
+    books = await book_service.get_books()
+    return books
+
+
+@router.get("/filter/{filter}", status_code=status.HTTP_200_OK)
+async def get_books_by_filter(filter: str, session: AsyncSession = Depends(get_session)):
+    book_service = BookService(session)
+    books = await book_service.get_books_by_filter(filter)
+    return books

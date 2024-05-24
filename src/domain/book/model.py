@@ -1,5 +1,4 @@
 from uuid import UUID, uuid4
-from datetime import datetime
 
 import sqlalchemy.dialects.postgresql as pg
 from sqlmodel import Column, Field, SQLModel
@@ -11,6 +10,6 @@ class Book(SQLModel, table=True):
     title: str
     author: str
     type: str | None = None
-    status: str = "unread"
+    status: str
+    physically: bool
     description: str | None = None
-    created_date: datetime = datetime.now().date()
