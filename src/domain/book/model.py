@@ -13,3 +13,4 @@ class Book(SQLModel, table=True):
     status: str
     physically: bool
     description: str | None = None
+    notes: str | None = None
