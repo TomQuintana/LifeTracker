@@ -1,5 +1,5 @@
 <h2 align="center">
-    This project consist in life tracker for manage my spends. 
+    This project consist in life tracker for manage my spends.
 </h2>
 <h5 align="center">In the future I have a implement an interface but for now its only a backend</h5>
 
@@ -22,23 +22,40 @@
 4. [Usage](#usage)
 5. [Folder Structure](#folder-structure)
 
+
+## Introduction
+
+This project is a backend service designed to help manage personal expenses, track users, and keep a record of books read or to be read. It leverages Python with FastAPI for the backend, PostgreSQL for the database, and Docker for containerization.
+
+
 ## Features
 
 ### Spends
 
-- Add new spend
-- Obtain all data of spends
+- **Add New Spend**: Users can add new spend records with details like amount, description, and date.
+- **Retrieve All Spends**: Users can fetch all their spend records.
+- **Calculate Total Spends**: Users can calculate the total spends for a specific period.
+
+### Users
+
+- **Create User**: Users can create an account by providing a username and password.
+- **Authentication**: Users can log in and receive a JSON Web Token (JWT) for authentication.
+- **Get User Details**: Users can fetch their profile details.
+
+### Books
+
+- **List All Books**: Users can list all books they have read or plan to read.
+- **Add New Book**: Users can add books to their reading list.
+- **Update Book Status**: Users can update the status of a book (e.g., read, unread).
+
 
 ## Usage
 - Generate a virtual enviroment by `python3 -m venv <name>`
 - Activate enviroment ` source .<name>/bin/activate`
 - Then install a necesary package in your enviroment using `pip install -r requirements.txt`
-- For the last run a server with `python3 runserver` in port 3000
+- Setup database execute a terminal `docker compose up -d` for create a postgres database
+- For the last run a server with `make run` in port 3000
 
-### Set up database
-
-- execute a terminal `docker compose up -d` for create a postgres database
 
 ## Documentation Endpoints
-
 For see a different curl endpoints go to - `http://localhost:3000/docs`
