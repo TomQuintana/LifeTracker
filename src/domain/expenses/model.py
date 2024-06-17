@@ -1,5 +1,5 @@
-from uuid import UUID, uuid4
 from datetime import datetime
+from uuid import UUID, uuid4
 
 import sqlalchemy.dialects.postgresql as pg
 from sqlmodel import Column, Field, SQLModel
@@ -14,7 +14,7 @@ class Expense(SQLModel, table=True):
     name: str
     price_ARS: float
     price_USDT: float | None = None
-    type: str | None = None
-    coutes: int | None = None
+    type: str = "others"
+    coutes: int | None = None  # NOTE: pass to str
     month: int = datetime.now().month
     date: datetime = datetime.now().date()
