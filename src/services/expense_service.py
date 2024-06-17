@@ -1,6 +1,8 @@
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from src.helper.helper import valid_type_input
+
 from ..domain.expenses.model import Expense
 from ..domain.expenses.requestModel import ExpenseRequest
 from .cotization import Cotization
@@ -16,6 +18,9 @@ class ExpenseService:
         await self.session.commit()
 
     async def create_expense(self, expense_data: ExpenseRequest):
+        if not valid_type_input(expense_data.type):
+            raise ValueError("Invalid type input")
+
         crypto_currency = "USDT"
         cotization_service = Cotization(crypto_currency)
         cotization = await cotization_service.calculate_cotization(expense_data.price_ARS)
@@ -23,7 +28,9 @@ class ExpenseService:
         expense = Expense(**expense_data.model_dump())
         expense.price_USDT = cotization
 
-        return await self._create_expense_db(expense)
+        await self._create_expense_db(expense)
+
+        return expense
 
     async def _obtatin_total(self, data) -> dict[str, float]:
         total_spend_ars = 0
@@ -31,7 +38,7 @@ class ExpenseService:
 
         for spend_data in data:
             total_spend_ars += spend_data.price_ARS
-            # total_spend_usdt += spend_data.price_USDT
+            total_spend_usdt += spend_data.price_USDT
 
         data_reponse = {
             "Total Spend in ARS": total_spend_ars,
