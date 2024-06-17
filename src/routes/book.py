@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, UploadFile, File
+from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.main import get_session
@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api/book", tags=["Book"])
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-async def create_user(book: BookRequest, session: AsyncSession = Depends(get_session)):
+async def create_book(book: BookRequest, session: AsyncSession = Depends(get_session)):
     book_service = BookService(session)
     book_created = await book_service.create_book(book)
     return book_created
