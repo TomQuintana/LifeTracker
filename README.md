@@ -5,6 +5,9 @@
 
 <div align="center">
 
+
+<!-- ![Personal Logo](./image/proyecto_logo.jpeg) -->
+
 ## Project technologies
 
 [![Python](https://img.shields.io/badge/Python-3178C6?style=for-the-badge&logo=python&logoColor=white&labelColor=101010)]()
@@ -18,14 +21,14 @@
 
 1. [Introduction](#introduction)
 2. [Features](#features)
-3. [Documentation Endpoints](#documentation-endpoints)
-4. [Usage](#usage)
-5. [Folder Structure](#folder-structure)
+3. [Usage](#usage)
+4. [Folder Structure](#folder-structure)
+5. [Documentation Endpoints](#documentation-endpoints)
 
 
 ## Introduction
 
-This project is a backend service designed to help manage personal expenses, track users, and keep a record of books read or to be read. It leverages Python with FastAPI for the backend, PostgreSQL for the database, and Docker for containerization.
+This project is a backend service designed to help manage personal expenses, track users, and keep a record of books read or to be read. It was developed using Python with FastAPI for the backend, PostgreSQL for the database, and Docker for containerization.
 
 
 ## Features
