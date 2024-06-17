@@ -1,14 +1,16 @@
-<h2 align="center">
-    This project consist in life tracker for manage my spends.
-</h2>
-<h5 align="center">In the future I have a implement an interface but for now its only a backend</h5>
+<h1 align="center">
+    LifeTracker
+</h1>
+
+<h4 align="left">
+    This project consist in life tracker for manage my expenses and keep a record of my books.
+</h4>
 
 <div align="center">
 
+<!-- <img src="./image/logo.jpg" alt="Personal Logo" width="800" height="450"> -->
 
-<!-- ![Personal Logo](./image/proyecto_logo.jpeg) -->
-
-## Project technologies
+## Project Technologies
 
 [![Python](https://img.shields.io/badge/Python-3178C6?style=for-the-badge&logo=python&logoColor=white&labelColor=101010)]()
 [![FastApi](https://img.shields.io/badge/fastapi-009688?style=for-the-badge&logo=fastapi&logoColor=white&labelColor=101010)]()
@@ -54,7 +56,7 @@ This project is a backend service designed to help manage personal expenses, tra
 
 ## Usage
 - Generate a virtual enviroment by `python3 -m venv <name>`
-- Activate enviroment ` source .<name>/bin/activate`
+- Activate enviroment `source .<name>/bin/activate`
 - Then install a necesary package in your enviroment using `pip install -r requirements.txt`
 - Setup database execute a terminal `docker compose up -d` for create a postgres database
 - For the last run a server with `make run` in port 3000
