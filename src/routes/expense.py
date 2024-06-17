@@ -1,6 +1,10 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Header
+from sqlmodel.ext.asyncio.session import AsyncSession
+
+from src.db.main import get_session
+from src.services.expense_service import ExpenseService
 
 from ..dependency.dependency_manager import DependencyManager
 from ..domain.expenses.requestModel import ExpenseRequest
@@ -13,15 +17,17 @@ dependency_manager = DependencyManager()
 @router.post("/create", status_code=HTTPStatus.CREATED)
 async def create_expense(
     expense_data: ExpenseRequest,
-    expense_service=Depends(dependency_manager.get_expense_service),
+    session_db: AsyncSession = Depends(get_session),
 ):
-    new_expense = await expense_service.create_expense(expense_data)
-    return new_expense
+    expense_service = ExpenseService(session_db)
+    expense = await expense_service.create_expense(expense_data)
+    return expense
 
 
 @router.get("/total-spend", status_code=HTTPStatus.OK)
 async def get_total(
-    month: int = Header(), expense_service=Depends(dependency_manager.get_expense_service)
+    month: int = Header(),
+    expense_service=Depends(dependency_manager.get_expense_service),
 ):
     total_response = await expense_service.calculate_total(month)
     return total_response
