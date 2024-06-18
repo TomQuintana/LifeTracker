@@ -1,6 +1,11 @@
+<div align="center">
 <h1 align="center">
     LifeTracker
 </h1>
+
+<img src="./image/proyecto_logo.jpeg" alt="Personal Logo" width="150" height="150">
+
+</div>
 
 <h4 align="left">
     This project consist in life tracker for manage my expenses and keep a record of my books.
@@ -8,7 +13,6 @@
 
 <div align="center">
 
-<!-- <img src="./image/logo.jpg" alt="Personal Logo" width="800" height="450"> -->
 
 ## Project Technologies
 
