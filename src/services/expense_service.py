@@ -11,10 +11,10 @@ from .cotization import Cotization
 
 
 class ExpenseService:
-    def __init__(self, session: AsyncSession):
-        self.session = session
+    def __init__(self, db_session: AsyncSession):
+        self.session = db_session
 
-    async def _create_expense_db(self, expense_data):
+    async def _save_expense_data(self, expense_data):
         self.session.add(expense_data)
         await self.session.commit()
 
@@ -32,7 +32,7 @@ class ExpenseService:
         expense = Expense(**expense_data.model_dump())
         expense.price_USDT = cotization
 
-        await self._create_expense_db(expense)
+        await self._save_expense_data(expense)
 
         return expense
 
