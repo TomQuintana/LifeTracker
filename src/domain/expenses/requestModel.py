@@ -10,8 +10,9 @@ class ExpenseRequest(BaseModel):
     name: str
     price_ARS: int
     price_USDT: float | None = None
-    type: str | None = None
+    type: str
     coutes: str | None = None
+    date: str | None = None
 
     model_config = {
         "json_schema_extra": {

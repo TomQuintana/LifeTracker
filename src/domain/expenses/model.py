@@ -15,6 +15,6 @@ class Expense(SQLModel, table=True):
     price_ARS: float
     price_USDT: float | None = None
     type: str = "others"
-    coutes: int | None = None  # NOTE: pass to str
+    coutes: str | None = None  # NOTE: pass to str
     month: int = datetime.now().month
-    date: datetime = datetime.now().date()
+    date: str | None = None

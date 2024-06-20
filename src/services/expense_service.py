@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -12,7 +14,6 @@ class ExpenseService:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    # NOTE: define a return type for principal methods
     async def _create_expense_db(self, expense_data):
         self.session.add(expense_data)
         await self.session.commit()
@@ -20,6 +21,9 @@ class ExpenseService:
     async def create_expense(self, expense_data: ExpenseRequest):
         if not valid_type_input(expense_data.type):
             raise ValueError("Invalid type input")
+
+        if expense_data.date is None:
+            expense_data.date = str(datetime.now().date())
 
         crypto_currency = "USDT"
         cotization_service = Cotization(crypto_currency)
