@@ -46,7 +46,7 @@ class ExpenseService:
 
         data_reponse = {
             "Total Spend in ARS": total_spend_ars,
-            "Total Spend in USDT": total_spend_usdt,
+            "Total Spend in USDT": round(total_spend_usdt, 2),
         }
 
         return data_reponse
