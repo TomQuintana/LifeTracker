@@ -33,9 +33,11 @@ async def get_total(
     return total_response
 
 
-@router.get("/data/{date_expense}", status_code=HTTPStatus.OK)
+@router.get("/data", status_code=HTTPStatus.OK)
 async def get_data(
-    date_expense: str, expense_service=Depends(dependency_manager.get_expense_service)
+    session_db: AsyncSession = Depends(get_session),
+    month: int = Header(),
 ):
-    data_spend = await expense_service.obtain_data(date_expense)
+    expense_service = ExpenseService(session_db)
+    data_spend = await expense_service.obtain_data(month)
     return data_spend
