@@ -48,8 +48,17 @@ class UserService:
             if not is_password_valid:
                 raise error
 
+            budget_usdt = is_user_exist.budget_USDT
+            if budget_usdt is None:
+                budget_usdt = 0.0
+
             access_token_expires = timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
-            token = self.auth_service.generate_token(email, access_token_expires)
+
+            token = self.auth_service.generate_token(
+                email,
+                budget_usdt,
+                access_token_expires,
+            )
             return token
 
         except Exception as e:
