@@ -1,15 +1,25 @@
 from http import HTTPStatus
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header
+from fastapi.security import OAuth2PasswordBearer
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.main import get_session
+from src.services.auth import Auth
 from src.services.expense_service import ExpenseService
 
 from ..dependency.dependency_manager import DependencyManager
 from ..domain.expenses.requestModel import ExpenseRequest
 
-router = APIRouter(prefix="/api/expense", tags=["Expense"])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+auth_service = Auth()
+router = APIRouter(
+    prefix="/api/expense",
+    tags=["Expense"],
+    dependencies=[Depends(auth_service.get_token)],
+)
 
 dependency_manager = DependencyManager()
 
@@ -28,7 +38,9 @@ async def create_expense(
 async def get_total(
     month: int = Header(),
     expense_service=Depends(dependency_manager.get_expense_service),
+    token: Annotated[str | None, Depends(oauth2_scheme)] = None,
 ):
+    auth_service.check_payload(token)
     total_response = await expense_service.calculate_total(month)
     return total_response
 
