@@ -1,9 +1,15 @@
 from datetime import datetime, timedelta, timezone
+from typing import Annotated
 
 import jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 
 from ..config.config import settings
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class Auth:
@@ -43,5 +49,20 @@ class Auth:
         return jwt.encode(encode, self.secret_key, self.algorithm)
 
     def check_payload(self, token):
-        decoded_token = jwt.decode(token, self.secret_key)
+        decoded_token = jwt.decode(token, self.secret_key, self.algorithm)
         return decoded_token
+
+    def _validate_token(self, token) -> str:
+        credentials_exception = HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+        try:
+            return self.check_payload(token)
+        except InvalidTokenError:
+            raise credentials_exception
+
+    async def get_token(self, token: Annotated[str | None, Depends(oauth2_scheme)]):
+        self._validate_token(token)
