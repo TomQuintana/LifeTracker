@@ -40,8 +40,8 @@ async def get_total(
     expense_service=Depends(dependency_manager.get_expense_service),
     token: Annotated[str | None, Depends(oauth2_scheme)] = None,
 ):
-    auth_service.check_payload(token)
-    total_response = await expense_service.calculate_total(month)
+    payload = auth_service.check_payload(token)
+    total_response = await expense_service.calculate_total(month, budget=payload.get("user_budge"))
     return total_response
 
 
