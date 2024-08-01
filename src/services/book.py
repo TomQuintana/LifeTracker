@@ -11,14 +11,13 @@ class BookService:
         self.session = session
 
     # REF: pass this to general service
-    async def _create_data_db(self, data):
+    async def _create_data_db(self, data: Book) -> None:
         self.session.add(data)
-        await self.session.commit()
+        return await self.session.commit()
 
     async def create_book(self, book_model) -> Book:
         book = Book(**book_model.model_dump())
         await self._create_data_db(book)
-
         return book
 
     async def get_books(self):
