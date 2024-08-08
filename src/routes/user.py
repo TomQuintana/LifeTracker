@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.db.main import get_session
+from src.db.db_manager import get_session
 from src.services.user_service import UserService
 
 from ..dependency.user.dependency_manager import DependencyManager

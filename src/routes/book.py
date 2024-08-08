@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.db.main import get_session
+from src.db.db_manager import get_session
 from src.modelRequest.book import BookRequest
 from src.services.auth import Auth
 from src.services.book import BookService

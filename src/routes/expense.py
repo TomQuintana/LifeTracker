@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Header
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.db.main import get_session
+from src.db.db_manager import get_session
 from src.services.auth import Auth
 from src.services.expense_service import ExpenseService
 
