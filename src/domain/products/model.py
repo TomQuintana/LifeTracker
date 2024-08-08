@@ -5,7 +5,7 @@ from sqlmodel import Column, Field, SQLModel
 
 
 class Products(SQLModel, table=True):
-    __tablename__ = "products"
+    __tablename__ = "products"  # type: ignore
     uuid: UUID = Field(sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4))
     name: str
     price_ARS: float

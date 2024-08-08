@@ -6,7 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.helper.helper import valid_type_input
 
 from ..domain.expenses.model import Expense
-from ..domain.expenses.requestModel import ExpenseRequest
+
+# from ..domain.expenses.requestModel import ExpenseRequest
 from ..domain.products.model import Products
 from .cotization import Cotization
 from .email_service import EmailService
@@ -24,7 +25,7 @@ class ExpenseService:
         self.session.add(expense_data)
         await self.session.commit()
 
-    async def create_expense(self, expense_data: ExpenseRequest):
+    async def create_expense(self, expense_data):
         print(expense_data.products)
         if not valid_type_input(expense_data.type):
             raise ValueError("Invalid type input")
