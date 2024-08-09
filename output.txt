@@ -1,0 +1,23 @@
+Name                                Price (ARS)     Price (USDT)    Type            Date
+Estufa abuela                       15000.0         10.63           target_cuotes   2024-07-08
+Remera padre por dia del padre      30000.0         21.26           target_cuotes   2024-07-08
+Campera invierno                    120000.0        85.05           clothes         2024-07-08
+Reloj xiaomi                        144399.0        102.34          elementary      2024-07-08
+Compra carrefour                    59060.0         41.86           food            2024-07-08
+Cancha Devoto                       3000.0          2.13            fubol           2024-07-08
+Panaderia                           5100.0          3.61            food            2024-07-08
+Termica para piernas                23900.0         16.91           clothes         2024-07-08
+Paltas x 3                          5555.0          3.94            food            2024-07-08
+Banana y Mandarina                  7600.0          5.39            food            2024-07-08
+Barras de cereal                    2600.0          1.84            food            2024-07-08
+Comida china                        5000.0          3.54            food            2024-07-08
+Impuesto Agua                       35728.0         25.29           fixed           2024-07-08
+8000 crema de mani                  8000.0          5.67            food            2024-07-08
+Mallas reloj                        23293.0         16.51           clothes         2024-07-08
+Bebida mas comida Devoto            15400.0         10.95           goOut           2024-07-10
+Compra Bitcoin                      15000.0         10.67           invesment       2024-07-10
+Compra ETH                          15000.0         10.67           invesment       2024-07-10
+Compra Cedear TSLA                  22000.0         15.66           invesment       2024-07-10
+Libro Analisis                      27500.0         19.49           books           2024-07-11
+Compra verduleria                   8430.0          5.79            food            2024-07-13
+Cancha Devoto                       3000.0          2.06            fubol           2024-07-13

@@ -1,18 +1,18 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.db_manager import get_session
-from src.services.user_service import UserService
+from ..services.user_service import UserService
 
-from ..dependency.user.dependency_manager import DependencyManager
-from ..modelRequest.user import UserRequestModel
+# from ...dependency.dependency_manager import DependencyManager
+# from ..modelRequest.user import UserRequestModel
 
 router = APIRouter(prefix="/api/user", tags=["User"])
 
 
-dependency_inyection = DependencyManager()
+# dependency_inyection = DependencyManager()
 
 
 class UserRequest(BaseModel):
@@ -20,12 +20,12 @@ class UserRequest(BaseModel):
     password: str
 
 
-@router.post("/create", status_code=status.HTTP_201_CREATED)
-async def create_user(
-    user_request: UserRequestModel,
-    user_service=Depends(dependency_inyection.use_user_service),
-):
-    await user_service.create_user(user_request)
+# @router.post("/create", status_code=status.HTTP_201_CREATED)
+# async def create_user(
+#     user_requestl,
+#     user_service=Depends(dependency_inyection.use_user_service),
+# ):
+#     await user_service.create_user(user_request)
 
 
 @router.post("/login")
