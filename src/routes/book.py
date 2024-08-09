@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, File, UploadFile, status
+from fastapi import APIRouter, Depends, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.db_manager import get_session
-from src.modelRequest.book import BookRequest
+
+# from src.modelRequest.book import BookRequest
 from src.services.auth import Auth
 from src.services.book import BookService
 
@@ -13,9 +14,9 @@ router = APIRouter(
 )
 
 
-@router.post("/create", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_book(
-    book: BookRequest,
+    book,
     session: AsyncSession = Depends(get_session),
 ):
     book_service = BookService(session)
@@ -23,7 +24,7 @@ async def create_book(
     return book_created
 
 
-@router.get("/data", status_code=status.HTTP_200_OK)
+@router.get("/", status_code=status.HTTP_200_OK)
 async def get_books(
     session: AsyncSession = Depends(get_session),
 ):
@@ -32,16 +33,16 @@ async def get_books(
     return books
 
 
-@router.get("/filter/{filter}", status_code=status.HTTP_200_OK)
+@router.get("/{filter}", status_code=status.HTTP_200_OK)
 async def get_books_by_filter(filter: str, session: AsyncSession = Depends(get_session)):
     book_service = BookService(session)
     books = await book_service.get_books_by_filter(filter)
     return books
 
 
-@router.post("/upload-csv", status_code=status.HTTP_201_CREATED)
-async def upload_csv(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
-    file_contents = await file.read()
-    book_service = BookService(session)
-    await book_service.upload_books_by_csv(file_contents)
-    return {"message": "File uploaded successfully"}
+# @router.post("/upload-csv", status_code=status.HTTP_201_CREATED)
+# async def upload_csv(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+#     file_contents = await file.read()
+#     book_service = BookService(session)
+#     await book_service.upload_books_by_csv(file_contents)
+#     return {"message": "File uploaded successfully"}
