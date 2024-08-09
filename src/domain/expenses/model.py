@@ -9,7 +9,7 @@ date_expense = datetime.now().date()
 
 
 class Expense(SQLModel, table=True):
-    __tablename__ = "expenses"
+    __tablename__ = "expenses"  # type: ignore
     uuid: UUID = Field(sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4))
     name: str
     price_ARS: float

@@ -4,11 +4,11 @@ from os import error
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.services.auth import Auth
-from src.services.cotization import Cotization
+from .auth import Auth
+from .cotization import Cotization
 
-from ..domain.user.model import User
-from ..modelRequest.user import UserRequestModel
+from ...domain.user.model import User
+# from ..modelRequest.user import UserRequestModel
 
 
 class UserService:
@@ -18,7 +18,7 @@ class UserService:
         self.sesion = session_db
         self.ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-    async def create_user(self, user_data: UserRequestModel) -> User:
+    async def create_user(self, user_data) -> User:
         crypto_currency = "USDT"
         cotization_service = Cotization(crypto_currency)
         cotization = await cotization_service.calculate_cotization(user_data.budget_ARS)
