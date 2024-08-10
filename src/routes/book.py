@@ -4,7 +4,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.db_manager import get_session
 
 # from src.modelRequest.book import BookRequest
-from ..interfaces.requests_schemas import CreateBookRequest
+from ..interfaces.requests_schemas import CreateBookRequest, UpdateBookRequest
 from ..interfaces.response_schemas import BookResponse, BookResponseAll, BookByUuidResponse
 from src.services.auth import Auth
 from src.services.book import BookService
@@ -23,7 +23,6 @@ async def create_book(
     book_service = BookService(session)
     book_created = await book_service.create_book(book)
     return BookResponse(**book_created.model_dump())
-    # return book_created
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
@@ -43,9 +42,19 @@ async def get_books_by_filter(uuid: str, session: AsyncSession = Depends(get_ses
     return BookByUuidResponse(**book)
 
 
-# @router.post("/upload-csv", status_code=status.HTTP_201_CREATED)
-# async def upload_csv(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
-#     file_contents = await file.read()
-#     book_service = BookService(session)
-#     await book_service.upload_books_by_csv(file_contents)
-#     return {"message": "File uploaded successfully"}
+@router.delete("/{uuid}", status_code=status.HTTP_200_OK)
+async def delete_books_by_uuid(uuid: str, session: AsyncSession = Depends(get_session)):
+    book_service = BookService(session)
+    await book_service.delete_books_by_uuid(uuid)
+    return {"message": "Book deleted successfully"}
+
+
+@router.put("/{uuid}", status_code=status.HTTP_200_OK)
+async def update_books_by_uuid(
+    uuid: str,
+    data: UpdateBookRequest,
+    session: AsyncSession = Depends(get_session),
+):
+    book_service = BookService(session)
+    await book_service.update_books_by_uuid(data, uuid)
+    return {"message": "Book updated successfully"}
