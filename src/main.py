@@ -14,6 +14,7 @@ from src.middleware.verify_token_middleware import verify_token_middleware
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("server is starting")
+    print("server docc - http://localhost:3000/docs")
     await init_db()
     yield
     print("server is shutting down")
