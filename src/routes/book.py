@@ -4,6 +4,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.db_manager import get_session
 
 # from src.modelRequest.book import BookRequest
+from ..interfaces.requests_schemas import CreateBookRequest
+from ..interfaces.response_schemas import BookResponse, BookResponseAll, BookByUuidResponse
 from src.services.auth import Auth
 from src.services.book import BookService
 
@@ -14,12 +16,14 @@ router = APIRouter(prefix="/api/books", tags=["Book"])
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_book(
-    book,
+    book: CreateBookRequest,
     session: AsyncSession = Depends(get_session),
 ):
+    print("book", book)
     book_service = BookService(session)
     book_created = await book_service.create_book(book)
-    return book_created
+    return BookResponse(**book_created.model_dump())
+    # return book_created
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
@@ -28,14 +32,15 @@ async def get_books(
 ):
     book_service = BookService(session)
     books = await book_service.get_books()
-    return books
+    return [BookResponseAll(**book.model_dump()) for book in books]
 
 
-@router.get("/{filter}", status_code=status.HTTP_200_OK)
-async def get_books_by_filter(filter: str, session: AsyncSession = Depends(get_session)):
+@router.get("/{uuid}", status_code=status.HTTP_200_OK)
+async def get_books_by_filter(uuid: str, session: AsyncSession = Depends(get_session)):
     book_service = BookService(session)
-    books = await book_service.get_books_by_filter(filter)
-    return books
+    book = await book_service.get_books_by_filter(uuid)
+    print("books", book)
+    return BookByUuidResponse(**book)
 
 
 # @router.post("/upload-csv", status_code=status.HTTP_201_CREATED)
