@@ -9,9 +9,7 @@ from src.services.book import BookService
 
 auth_service = Auth()
 
-router = APIRouter(
-    prefix="/api/book", tags=["Book"], dependencies=[Depends(auth_service.get_token)]
-)
+router = APIRouter(prefix="/api/books", tags=["Book"])
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
