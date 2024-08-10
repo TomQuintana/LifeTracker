@@ -11,6 +11,9 @@ class CreateBookRequest(BaseModel):
 
 
 class UpdateBookRequest(BaseModel):
-    title: str
-    author: str
-    published_date: str
+    title: str | None = None
+    author: str | None = None
+    type: str | None = None
+    description: str | None = None
+    status: str | None = None
+    physically: bool | None = None
