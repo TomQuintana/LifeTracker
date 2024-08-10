@@ -5,6 +5,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.domain.book.model import Book
+from src.utils.format_data import format_data
 
 
 class BookService:
@@ -24,11 +25,7 @@ class BookService:
     async def get_books(self):
         query = select(Book)
         book_data = await self.session.exec(query)
-
-        book_response = []
-        for book in book_data:
-            book_response.append(book)
-
+        book_response = format_data(book_data)
         return book_response
 
     # TODO: review
