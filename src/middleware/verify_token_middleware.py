@@ -25,8 +25,7 @@ async def verify_token_middleware(request: Request, call_next):
             )
 
         try:
-            test = await verify_token(token)
-            print("test", test)
+            await verify_token(token)
         except HTTPException as error:
             return JSONResponse(
                 status_code=error.status_code,
