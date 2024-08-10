@@ -5,7 +5,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.domain.book.model import Book
-from src.utils.format_data import format_data
+from src.utils.format_data import format_data_list, format_data_dict
 
 
 class BookService:
@@ -25,21 +25,14 @@ class BookService:
     async def get_books(self):
         query = select(Book)
         book_data = await self.session.exec(query)
-        book_response = format_data(book_data)
+        book_response = format_data_list(book_data)
         return book_response
 
-    # TODO: review
-    async def get_books_by_filter(self, filter_value: str):
-        query = select(Book).where(Book.filter_value)
+    async def get_books_by_filter(self, uuid: str):
+        query = select(Book).where(Book.uuid == uuid)
         book_data = await self.session.exec(query)
-
-        book_response = []
-        for book in book_data:
-            book_response.append(book)
-
+        book_response = format_data_dict(book_data)
         return book_response
-
-        # query = select(Expense).where(Expense.month == month_expense)
 
     async def upload_books_by_csv(self, file):
         print(file)
