@@ -56,5 +56,5 @@ async def update_books_by_uuid(
     session: AsyncSession = Depends(get_session),
 ):
     book_service = BookService(session)
-    await book_service.update_books_by_uuid(data, uuid)
+    await book_service.update_books_by_uuid(data, uuid)  # type: ignore
     return {"message": "Book updated successfully"}
