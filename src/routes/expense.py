@@ -24,7 +24,7 @@ router = APIRouter(
 dependency_manager = DependencyManager()
 
 
-@router.post("/create", status_code=HTTPStatus.CREATED)
+@router.post("/", status_code=HTTPStatus.CREATED)
 async def create_expense(
     expense_data: ExpenseRequest,
     session_db: AsyncSession = Depends(get_session),
@@ -34,7 +34,17 @@ async def create_expense(
     return expense
 
 
-@router.get("/total-spend", status_code=HTTPStatus.OK)
+@router.get("/", status_code=HTTPStatus.OK)
+async def get_data(
+    session_db: AsyncSession = Depends(get_session),
+    month: int = Header(default=None, alias="Month"),
+):
+    expense_service = ExpenseService(session_db)
+    data_spend = await expense_service.obtain_data(month)
+    return data_spend
+
+
+@router.get("/total", status_code=HTTPStatus.OK)
 async def get_total(
     month: int = Header(),
     expense_service=Depends(dependency_manager.get_expense_service),
@@ -45,11 +55,13 @@ async def get_total(
     return total_response
 
 
-@router.get("/data", status_code=HTTPStatus.OK)
-async def get_data(
-    session_db: AsyncSession = Depends(get_session),
-    month: int = Header(),
-):
-    expense_service = ExpenseService(session_db)
-    data_spend = await expense_service.obtain_data(month)
-    return data_spend
+# @router.get('/', status_code=HTTPStatus.OK)
+# async def get_data_group_by(
+#     group_by: str,
+#     month: int,
+#     session_db: AsyncSession = Depends(get_session),
+# ):
+#     print(group_by, month)
+#     expense_service = ExpenseService(session_db)
+#     # data_spend = await expense_service.obtain_data_group_by(group_by, month)
+#     # return data_spend
