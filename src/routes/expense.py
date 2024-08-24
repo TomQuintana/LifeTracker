@@ -9,7 +9,6 @@ from src.db.db_manager import get_session
 from src.services.auth import Auth
 from src.services.expense_service import ExpenseService
 
-from ..dependency.dependency_manager import DependencyManager
 from ..domain.expenses.requestModel import ExpenseRequest
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -20,8 +19,6 @@ router = APIRouter(
     tags=["Expense"],
     dependencies=[Depends(auth_service.get_token)],
 )
-
-dependency_manager = DependencyManager()
 
 
 @router.post("/", status_code=HTTPStatus.CREATED)
@@ -38,30 +35,20 @@ async def create_expense(
 async def get_data(
     session_db: AsyncSession = Depends(get_session),
     month: int = Header(default=None, alias="Month"),
+    type: str = Header(default=None, alias="Type"),
 ):
     expense_service = ExpenseService(session_db)
-    data_spend = await expense_service.obtain_data(month)
+    data_spend = await expense_service.obtain_data(month, type)
     return data_spend
 
 
 @router.get("/total", status_code=HTTPStatus.OK)
 async def get_total(
     month: int = Header(),
-    expense_service=Depends(dependency_manager.get_expense_service),
+    session: AsyncSession = Depends(get_session),
     token: Annotated[str | None, Depends(oauth2_scheme)] = None,
 ):
     payload = auth_service.check_payload(token)
+    expense_service = ExpenseService(session)
     total_response = await expense_service.calculate_total(month, budget=payload.get("user_budge"))
     return total_response
-
-
-# @router.get('/', status_code=HTTPStatus.OK)
-# async def get_data_group_by(
-#     group_by: str,
-#     month: int,
-#     session_db: AsyncSession = Depends(get_session),
-# ):
-#     print(group_by, month)
-#     expense_service = ExpenseService(session_db)
-#     # data_spend = await expense_service.obtain_data_group_by(group_by, month)
-#     # return data_spend
