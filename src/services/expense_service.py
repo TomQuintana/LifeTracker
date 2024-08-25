@@ -3,13 +3,13 @@ from datetime import datetime
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.helper.helper import valid_type_input
+
+from ..utils.valid_type_input import valid_type_input
 
 from ..domain.expenses.model import Expense
-from ..domain.expenses.requestModel import ExpenseRequest
 from ..domain.products.model import Products
 from .cotization import Cotization
-from .email_service import EmailService
+from ..utils.alert import bad_request
 
 
 class ExpenseService:
@@ -24,8 +24,7 @@ class ExpenseService:
         self.session.add(expense_data)
         await self.session.commit()
 
-    async def create_expense(self, expense_data: ExpenseRequest):
-        print(expense_data.products)
+    async def create_expense(self, expense_data):
         if not valid_type_input(expense_data.type):
             raise ValueError("Invalid type input")
 
@@ -41,7 +40,7 @@ class ExpenseService:
         await self._save_expense_data(expense)
 
         for product in expense_data.products:
-            product_data = Products(**product)
+            product_data = Products(**product.model_dump())
             cotization = await cotization_service.calculate_cotization(product_data.price_ARS)
             product_data.price_USDT = cotization
             product_data.expense_id = expense.uuid
@@ -106,14 +105,30 @@ class ExpenseService:
             data_reponse.append(data_list)
         return data_reponse
 
-    async def obtain_data(self, month: int):
+        # la idea es obtener [types] - [total by type]
+        # rwturn [{types: [type], total_by_type: [total]}]
+
+    async def obtain_data(self, month: int | None = None, by: str | None = None):
+        if month is None:
+            bad_request("Month is required")
+
+        if by is not None:
+            month_expense = int(month)
+            query_expenses = select(Expense).where(Expense.month == month_expense)
+            data_expenses = await self.session.exec(query_expenses)
+
+            data_type = [data.type for data in data_expenses]
+            print(data_type)
+
+            return await self.process_data(data_expenses)
+
         month_expense = int(month)
         query_expenses = select(Expense).where(Expense.month == month_expense)
 
         data_expenses = await self.session.exec(query_expenses)
         return await self.process_data(data_expenses)
 
-    async def send_email(self, user_email, password):
-        email_service = EmailService("tomquintana20@gmail.com", password)
-        email_service.send(user_email)
-        pass
+    # async def send_email(self, user_email, password):
+    #     email_service = EmailService("tomquintana20@gmail.com", password)
+    #     email_service.send(user_email)
+    #     pass

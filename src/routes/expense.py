@@ -6,10 +6,9 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.db_manager import get_session
+from src.dto.expenses import ExpenseRequest
 from src.services.auth import Auth
 from src.services.expense_service import ExpenseService
-
-from ..domain.expenses.requestModel import ExpenseRequest
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -19,16 +18,6 @@ router = APIRouter(
     tags=["Expense"],
     dependencies=[Depends(auth_service.get_token)],
 )
-
-
-@router.post("/", status_code=HTTPStatus.CREATED)
-async def create_expense(
-    expense_data: ExpenseRequest,
-    session_db: AsyncSession = Depends(get_session),
-):
-    expense_service = ExpenseService(session_db)
-    expense = await expense_service.create_expense(expense_data)
-    return expense
 
 
 @router.get("/", status_code=HTTPStatus.OK)
@@ -52,3 +41,13 @@ async def get_total(
     expense_service = ExpenseService(session)
     total_response = await expense_service.calculate_total(month, budget=payload.get("user_budge"))
     return total_response
+
+
+@router.post("/", status_code=HTTPStatus.CREATED)
+async def create_expense(
+    data: ExpenseRequest,
+    session_db: AsyncSession = Depends(get_session),
+):
+    expense_service = ExpenseService(session_db)
+    expense = await expense_service.create_expense(data)
+    return expense
