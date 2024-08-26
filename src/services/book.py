@@ -3,7 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.domain.book.model import Book
 from src.utils.alert import not_found_resource
-from src.utils.format_data import format_data_dict, format_data_list
+from src.utils.format_data import format_data_dict
 
 from ..repository.queries import (
     create_data_db,
@@ -33,17 +33,19 @@ class BookService:
         except Exception as e:
             raise e
 
-        book_response = format_data_list(book_data)
+        book_response = book_data.all()
         return book_response
 
     async def get_books_by_filter(self, uuid: str):
-        try:
-            book_data = await get_books_by_filter(self.session, uuid)
-            book_response = format_data_dict(book_data)
-            return book_response
+        book_data = await get_books_by_filter(self.session, uuid)
+        book_response = book_data
 
-        except Exception as e:
-            raise e
+        if book_response is None:
+            print("Book not found")
+            not_found_resource("Book not found")
+
+        book_response = format_data_dict(book_data)
+        return book_response
 
     async def delete_books_by_uuid(self, uuid: str):
         try:
@@ -57,11 +59,13 @@ class BookService:
     async def update_books_by_uuid(self, data: dict, uuid: str):
         query = select(Book).where(Book.uuid == uuid)
         result = await self.session.exec(query)
-
         book_to_update = result.one()
+
         if not book_to_update:
             not_found_resource("Book not found")
 
         book_to_update.status = data.status  # type: ignore
+        book_to_update.sqlmodel_update(data)
 
-        return await self.session.commit()
+        await self.session.commit()
+        return self.session.refresh(book_to_update)

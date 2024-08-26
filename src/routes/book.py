@@ -5,11 +5,15 @@ from src.db.db_manager import get_session
 from src.services.auth import Auth
 from src.services.book import BookService
 
-# from src.modelRequest.book import BookRequest
 from ..interfaces.requests_schemas import CreateBookRequest, UpdateBookRequest
 from ..interfaces.response_schemas import BookResponse, BookResponseAll
 
 auth_service = Auth()
+
+
+# NOTE: cheacquear porque repito siempre session y BookService
+session = (Depends(get_session),)
+book_service = BookService(session)
 
 router = APIRouter(prefix="/api/books", tags=["Book"])
 
