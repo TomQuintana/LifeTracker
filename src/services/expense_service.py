@@ -53,6 +53,7 @@ class ExpenseService:
         total_spend_usdt: float = 0
 
         for spend_data in data:
+            print(spend_data)
             total_spend_ars += spend_data.price_ARS
             total_spend_usdt += spend_data.price_USDT
 
@@ -64,6 +65,24 @@ class ExpenseService:
         }
 
         return data_reponse
+
+    async def _obtatin_total_02(self, data, budget: float):
+        types = ["others", "food", "goOut", "fixed", "clothes", "books", "fubol"]
+
+        totals = {types_expense: 0 for types_expense in types}
+
+        for item in data:
+            if item.type in totals:
+                totals[item.type] += item.price_ARS
+
+        for types_expense, total in totals.items():
+            print(f"Total para {types_expense}: {total} ARS")
+
+        total_globall = await self._obtatin_total(data, budget)
+        print(total_globall)
+        return {
+            "Total Spend by Type": totals,
+        }
 
     async def calculate_total(self, month: int, budget: float):
         month_expense = int(month)  # REF: pass a query separeted method
@@ -137,7 +156,11 @@ class ExpenseService:
     async def get_expense_by_uuid(self, uuid: str):
         statement = select(Expense).where(Expense.uuid == uuid)
         query_expense = await self.session.exec(statement)
-        data_expenses = await self.process_data(
-            query_expense
-        )  # NOTE: generate other method to process data
+        data_expenses = await self.process_data(query_expense)
         return data_expenses
+
+    async def get_total_by_type(self, month: int, budget: float):
+        month_expense = int(month)  # REF: pass a query separeted method
+        query = select(Expense).where(Expense.month == month_expense)
+        data = await self.session.exec(query)
+        return await self._obtatin_total_02(data, budget)

@@ -20,6 +20,19 @@ router = APIRouter(
 )
 
 
+@router.get("/total", status_code=HTTPStatus.OK)
+async def get_total(
+    month: int = Header(),
+    session: AsyncSession = Depends(get_session),
+    token: Annotated[str | None, Depends(oauth2_scheme)] = None,
+):
+    print("total solo")
+    payload = auth_service.check_payload(token)
+    expense_service = ExpenseService(session)
+    total_response = await expense_service.calculate_total(month, budget=payload.get("user_budge"))
+    return total_response
+
+
 @router.get("/", status_code=HTTPStatus.OK)
 async def get_data(
     session_db: AsyncSession = Depends(get_session),
@@ -38,15 +51,17 @@ async def get_expense_by_uuid(uuid: str, session_db: AsyncSession = Depends(get_
     return expense
 
 
-@router.get("/total", status_code=HTTPStatus.OK)
-async def get_total(
+@router.get("/total/{byType}", status_code=HTTPStatus.OK)
+async def get_total_by_type(
     month: int = Header(),
     session: AsyncSession = Depends(get_session),
     token: Annotated[str | None, Depends(oauth2_scheme)] = None,
 ):
     payload = auth_service.check_payload(token)
     expense_service = ExpenseService(session)
-    total_response = await expense_service.calculate_total(month, budget=payload.get("user_budge"))
+    total_response = await expense_service.get_total_by_type(
+        month, budget=payload.get("user_budge")
+    )
     return total_response
 
 
