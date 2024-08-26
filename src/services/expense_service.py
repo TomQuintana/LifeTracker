@@ -128,7 +128,8 @@ class ExpenseService:
         data_expenses = await self.session.exec(query_expenses)
         return await self.process_data(data_expenses)
 
-    # async def send_email(self, user_email, password):
-    #     email_service = EmailService("tomquintana20@gmail.com", password)
-    #     email_service.send(user_email)
-    #     pass
+    async def get_expense_by_uuid(self, uuid: str):
+        statement = select(Expense).where(Expense.uuid == uuid)
+        query_expense = await self.session.exec(statement)
+        data_expenses = await self.process_data(query_expense)
+        return data_expenses

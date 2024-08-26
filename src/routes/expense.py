@@ -31,6 +31,13 @@ async def get_data(
     return data_spend
 
 
+@router.get("/{uuid}", status_code=HTTPStatus.OK)
+async def get_expense_by_uuid(uuid: str, session_db: AsyncSession = Depends(get_session)):
+    expense_service = ExpenseService(session_db)
+    expense = await expense_service.get_expense_by_uuid(uuid)
+    return expense
+
+
 @router.get("/total", status_code=HTTPStatus.OK)
 async def get_total(
     month: int = Header(),
