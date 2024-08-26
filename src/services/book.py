@@ -2,6 +2,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.domain.book.model import Book
+from src.dto.books import BookToUpdat
 from src.utils.alert import not_found_resource
 from src.utils.format_data import format_data_dict
 
@@ -41,7 +42,6 @@ class BookService:
         book_response = book_data
 
         if book_response is None:
-            print("Book not found")
             not_found_resource("Book not found")
 
         book_response = format_data_dict(book_data)
@@ -56,7 +56,7 @@ class BookService:
         except Exception as e:
             raise e
 
-    async def update_books_by_uuid(self, data: dict, uuid: str):
+    async def update_books_by_uuid(self, update_data: BookToUpdat, uuid: str):
         query = select(Book).where(Book.uuid == uuid)
         result = await self.session.exec(query)
         book_to_update = result.one()
@@ -64,8 +64,9 @@ class BookService:
         if not book_to_update:
             not_found_resource("Book not found")
 
-        book_to_update.status = data.status  # type: ignore
-        book_to_update.sqlmodel_update(data)
+        update_data_dict = update_data.model_dump()
+        for key, value in update_data_dict.items():
+            setattr(book_to_update, key, value)
 
         await self.session.commit()
         return self.session.refresh(book_to_update)

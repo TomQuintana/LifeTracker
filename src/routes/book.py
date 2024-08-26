@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.db_manager import get_session
+from src.dto.books import BookToUpdat
 from src.services.auth import Auth
 from src.services.book import BookService
 
-from ..interfaces.requests_schemas import CreateBookRequest, UpdateBookRequest
+from ..interfaces.requests_schemas import CreateBookRequest
 from ..interfaces.response_schemas import BookResponse, BookResponseAll
 
 auth_service = Auth()
@@ -54,7 +55,7 @@ async def delete_books_by_uuid(uuid: str, session: AsyncSession = Depends(get_se
 @router.put("/{uuid}", status_code=status.HTTP_200_OK)
 async def update_books_by_uuid(
     uuid: str,
-    data: UpdateBookRequest,
+    data: BookToUpdat,
     session: AsyncSession = Depends(get_session),
 ):
     book_service = BookService(session)
