@@ -93,6 +93,7 @@ class ExpenseService:
             products = await self.get_products_by_expense_uuid(formatted_data.uuid)
 
             data_list = {
+                "uuid": formatted_data.uuid,
                 "name": formatted_data.name,
                 "price_ARS": formatted_data.price_ARS,
                 "price_USDT": formatted_data.price_USDT,
@@ -105,31 +106,38 @@ class ExpenseService:
             data_reponse.append(data_list)
         return data_reponse
 
-        # la idea es obtener [types] - [total by type]
-        # rwturn [{types: [type], total_by_type: [total]}]
+    async def process_data_all(self, data_expenses):
+        data_reponse = []
 
-    async def obtain_data(self, month: int | None = None, by: str | None = None):
+        for element in data_expenses:
+            data_list = {
+                "uuid": element.uuid,
+                "name": element.name,
+                "price_ARS": element.price_ARS,
+                "price_USDT": element.price_USDT,
+                "type": element.type,
+                "date": element.date,
+                "coutes": element.coutes,
+            }
+
+            data_reponse.append(data_list)
+
+        return data_reponse
+
+    async def obtain_data(self, month: int | None = None):
         if month is None:
             bad_request("Month is required")
-
-        if by is not None:
-            month_expense = int(month)
-            query_expenses = select(Expense).where(Expense.month == month_expense)
-            data_expenses = await self.session.exec(query_expenses)
-
-            data_type = [data.type for data in data_expenses]
-            print(data_type)
-
-            return await self.process_data(data_expenses)
 
         month_expense = int(month)
         query_expenses = select(Expense).where(Expense.month == month_expense)
 
         data_expenses = await self.session.exec(query_expenses)
-        return await self.process_data(data_expenses)
+        return await self.process_data_all(data_expenses)
 
     async def get_expense_by_uuid(self, uuid: str):
         statement = select(Expense).where(Expense.uuid == uuid)
         query_expense = await self.session.exec(statement)
-        data_expenses = await self.process_data(query_expense)
+        data_expenses = await self.process_data(
+            query_expense
+        )  # NOTE: generate other method to process data
         return data_expenses

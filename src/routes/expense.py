@@ -27,7 +27,7 @@ async def get_data(
     type: str = Header(default=None, alias="Type"),
 ):
     expense_service = ExpenseService(session_db)
-    data_spend = await expense_service.obtain_data(month, type)
+    data_spend = await expense_service.obtain_data(month)
     return data_spend
 
 
