@@ -164,3 +164,11 @@ class ExpenseService:
         query = select(Expense).where(Expense.month == month_expense)
         data = await self.session.exec(query)
         return await self._obtatin_total_02(data, budget)
+
+    async def delete_expense_by_uuid(self, uuid: str):
+        query = select(Expense).where(Expense.uuid == uuid)
+        result = await self.session.exec(query)
+        expense_to_delete = result.one()
+        await self.session.delete(expense_to_delete)
+        await self.session.commit()
+        return {"message": "Expense deleted successfully"}
