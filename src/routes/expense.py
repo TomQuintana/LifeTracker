@@ -73,3 +73,10 @@ async def create_expense(
     expense_service = ExpenseService(session_db)
     expense = await expense_service.create_expense(data)
     return expense
+
+
+@router.delete("/{uuid}", status_code=HTTPStatus.NO_CONTENT)
+async def delete_expense_by_uuid(uuid: str, session_db: AsyncSession = Depends(get_session)):
+    expense_service = ExpenseService(session_db)
+    await expense_service.delete_expense_by_uuid(uuid)
+    return {"message": "Expense deleted successfully"}
