@@ -1,6 +1,6 @@
 from datetime import timedelta
-from os import error
 
+from fastapi import HTTPException, status
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -8,7 +8,7 @@ from src.services.auth import Auth
 from src.services.cotization import Cotization
 
 from ..domain.user.model import User
-from ..modelRequest.user import UserRequestModel
+# from ..modelRequest.user import UserRequestModel
 
 
 class UserService:
@@ -18,7 +18,7 @@ class UserService:
         self.sesion = session_db
         self.ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-    async def create_user(self, user_data: UserRequestModel) -> User:
+    async def create_user(self, user_data) -> User:
         crypto_currency = "USDT"
         cotization_service = Cotization(crypto_currency)
         cotization = await cotization_service.calculate_cotization(user_data.budget_ARS)
@@ -41,12 +41,15 @@ class UserService:
     async def login(self, email: str, password: str) -> str:
         try:
             is_user_exist = await self._search_user_by_email(email)
+
             if not is_user_exist:
-                raise error
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
             is_password_valid = self.auth_service.verify_password(password, is_user_exist.password)
             if not is_password_valid:
-                raise error
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+                )
 
             budget_usdt = is_user_exist.budget_USDT
             if budget_usdt is None:
