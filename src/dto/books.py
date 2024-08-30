@@ -12,3 +12,7 @@ class BookSchema(BaseModel):
 
 class BookToUpdat(BookSchema):
     pass
+
+
+class BookToCreate(BookSchema):
+    pass
