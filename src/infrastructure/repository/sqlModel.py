@@ -6,8 +6,6 @@ from src.domain.book.model import Book
 from ...domain.book.book_repository import BookRepository
 from ...dto.books import BookSchema
 
-# session = Depends(get_session)
-
 
 class SqlModelRepository(BookRepository):
     def __init__(self, session: AsyncSession):

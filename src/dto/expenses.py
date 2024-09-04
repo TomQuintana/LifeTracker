@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class Product(BaseModel):
     name: str
+    quantity: int
     price_ARS: float
     price_USDT: float | None = None
 
