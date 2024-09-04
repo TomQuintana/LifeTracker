@@ -63,9 +63,6 @@ class ExpenseService:
 
         expenses = await self.repository.get_expenses_by_month(month)
 
-        if expenses is not None:
-            bad_request("Expenses not found")
-
         data_response = []
         for expense in expenses:
             products = await self.repository.get_products_by_expense_id(expense.id)
