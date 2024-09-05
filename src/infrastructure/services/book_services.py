@@ -8,9 +8,9 @@ class BookService:
     def __init__(self, repository: BookRepository):
         self.repository = repository
 
-    async def create_book(self, book_model) -> Book:
+    async def create_book(self, data) -> Book:
         try:
-            book_data = book_model.dict()
+            book_data = data.dict()
             book_entity = Book(**book_data)
             await self.repository.createBook(book_entity)
 

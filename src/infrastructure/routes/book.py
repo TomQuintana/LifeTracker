@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, status
 
 from ...application.dto.books import BookToCreate
 
-from ...interfaces.response_schemas import BookResponse
 from ..dependecy import get_book_service
 from ..services.auth import Auth
 from ..services.book_services import BookService
@@ -18,7 +17,7 @@ async def create_book(
     book_service: BookService = Depends(get_book_service),
 ):
     book_created = await book_service.create_book(data)
-    return BookResponse(**book_created.model_dump())
+    return book_created
 
 
 @router.get("/", status_code=status.HTTP_200_OK)

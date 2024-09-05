@@ -9,8 +9,6 @@ from ..services.cotization import Cotization
 
 from ...domain.user.model import User
 
-# from ..modelRequest.user import UserRequestModel
-
 
 class UserService:
     auth_service = Auth()
