@@ -1,5 +1,5 @@
 from src.domain.book.model import Book
-from src.utils.alert import alert_not_found_resource
+from ..infrastructure.utils.alerts import alert_not_found_resource
 
 from ..domain.book.book_repository import BookRepository
 
