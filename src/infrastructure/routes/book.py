@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, status
 
-from src.dto.books import BookToCreate
-from src.services.auth import Auth
-from src.services.book_services import BookService
+from ...application.dto.books import BookToCreate
 
-from ..infrastructure.dependecy import get_book_service
-from ..interfaces.response_schemas import BookResponse
-from ..infrastructure.utils.alert import success_book_deleted
+from ...interfaces.response_schemas import BookResponse
+from ..dependecy import get_book_service
+from ..services.auth import Auth
+from ..services.book_services import BookService
+from ..utils.alerts import success_book_deleted
 
 auth_service = Auth()
 router = APIRouter(prefix="/api/books", tags=["Book"])

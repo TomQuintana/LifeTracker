@@ -4,7 +4,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.domain.book.model import Book
 
 from ...domain.book.book_repository import BookRepository
-from ...dto.books import BookSchema
+from ...application.dto.books import BookSchema
 
 
 class SqlModelRepository(BookRepository):

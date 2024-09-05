@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 
-from ..config.config import settings
+from ..config.dev_env import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

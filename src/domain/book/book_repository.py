@@ -1,7 +1,7 @@
 from typing import Optional
 from abc import abstractmethod, ABC
 from ...domain.book.model import Book
-from ...dto.books import BookSchema
+from ...application.dto.books import BookSchema
 
 
 class BookRepository(ABC):

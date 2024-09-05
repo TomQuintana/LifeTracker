@@ -3,12 +3,11 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, Query
 from fastapi.security import OAuth2PasswordBearer
 
-from src.dto.expenses import ExpenseRequest
-from src.services.auth import Auth
-from src.services.expense_service import ExpenseService
+from ...application.dto.expenses import ExpenseRequest
+from ..services.auth import Auth
+from ..services.expense_service import ExpenseService
+from ..dependency.expense_dependency import get_expense_service
 
-
-from ..infrastructure.dependency.expense_dependency import get_expense_service
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

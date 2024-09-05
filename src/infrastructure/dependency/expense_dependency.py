@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...db.db_manager import get_session
+from ..db.db_manager import get_session
 from ...infrastructure.repository.SQLModel.sqlModel_expenses import SqlModelExpenseRepository
-from ...services.expense_service import ExpenseService
+from ..services.expense_service import ExpenseService
 
 
 def get_repository(session: AsyncSession = Depends(get_session)):

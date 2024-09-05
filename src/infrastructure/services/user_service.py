@@ -4,10 +4,11 @@ from fastapi import HTTPException, status
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.services.auth import Auth
-from src.services.cotization import Cotization
+from ..services.auth import Auth
+from ..services.cotization import Cotization
 
-from ..domain.user.model import User
+from ...domain.user.model import User
+
 # from ..modelRequest.user import UserRequestModel
 
 

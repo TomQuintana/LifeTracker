@@ -1,7 +1,7 @@
 from src.domain.book.model import Book
-from ..infrastructure.utils.alerts import alert_not_found_resource
+from ..utils.alerts import alert_not_found_resource
 
-from ..domain.book.book_repository import BookRepository
+from ...domain.book.book_repository import BookRepository
 
 
 class BookService:

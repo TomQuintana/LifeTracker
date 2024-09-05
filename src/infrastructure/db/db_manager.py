@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from ..config.config import settings
+from ..config.dev_env import settings
 
 async_engine = create_async_engine(settings.POSTGRESQL_URL, future=True)
 

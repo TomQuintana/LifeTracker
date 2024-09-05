@@ -1,10 +1,10 @@
-from ..domain.expenses.expenses_repository import ExpenseRepository
-from ..domain.expenses.model import Expense
-from ..domain.products.model import Products
-from ..infrastructure.utils.alerts import bad_request
-from ..infrastructure.utils.valid_type_input import valid_type_input
+from ...domain.expenses.expenses_repository import ExpenseRepository
+from ...domain.expenses.model import Expense
+from ...domain.products.model import Products
+from ...infrastructure.utils.alerts import bad_request
+from ...infrastructure.utils.valid_type_input import valid_type_input
 from .cotization import Cotization
-from ..infrastructure.constants.types_expenses import EXPENSE_TYPES
+from ...infrastructure.constants.types_expenses import EXPENSE_TYPES
 
 crypto_currency = "USDT"
 
