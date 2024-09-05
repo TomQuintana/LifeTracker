@@ -29,6 +29,15 @@ async def get_data(
     return data_spend
 
 
+@router.get("/total", status_code=HTTPStatus.OK)
+async def get_total(
+    month: int = Query(None, description="The month for filtering expenses"),
+    expense_service: ExpenseService = Depends(get_expense_service),
+):
+    total = await expense_service.fetch_total(month)
+    return total
+
+
 @router.post("/", status_code=HTTPStatus.CREATED)
 async def create_expense(
     data: ExpenseRequest, expense_service: ExpenseService = Depends(get_expense_service)

@@ -2,8 +2,9 @@ from ..domain.expenses.expenses_repository import ExpenseRepository
 from ..domain.expenses.model import Expense
 from ..domain.products.model import Products
 from ..utils.alert import bad_request
-from ..utils.valid_type_input import valid_type_input
+from ..infrastructure.utils.valid_type_input import valid_type_input
 from .cotization import Cotization
+from ..infrastructure.constants.types_expenses import EXPENSE_TYPES
 
 crypto_currency = "USDT"
 
@@ -12,6 +13,10 @@ class ExpenseService:
     def __init__(self, repository: ExpenseRepository):
         self.repository = repository
         self.cotization_service = Cotization(crypto_currency)
+
+    def _valid_is_month_pass(self, month):
+        if not month:
+            bad_request("Month is required")
 
     async def create_expense(self, data):
         if not valid_type_input(data.type):
@@ -58,8 +63,7 @@ class ExpenseService:
             raise e
 
     async def fetch_data(self, month: int):
-        if not month:
-            bad_request("Month is required")
+        self._valid_is_month_pass(month)
 
         expenses = await self.repository.get_expenses_by_month(month)
 
@@ -92,3 +96,14 @@ class ExpenseService:
             data_response.append(expenses_data)
 
         return data_response
+
+    async def fetch_total(self, month: int):
+        self._valid_is_month_pass(month)
+        expenses_data = await self.repository.get_expenses_by_month(month)
+
+        totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
+
+        for expense in expenses_data:
+            totals[expense.type] += expense.price_ARS
+
+        return totals
