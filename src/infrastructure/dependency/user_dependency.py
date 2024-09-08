@@ -10,5 +10,5 @@ def get_repository(session: AsyncSession = Depends(get_session)):
     return SqlModelUserRepository(session)
 
 
-def get_expense_service(repository: SqlModelUserRepository = Depends(get_repository)):
+def get_user_service(repository: SqlModelUserRepository = Depends(get_repository)):
     return UserService(repository)

@@ -8,8 +8,7 @@ class SqlModelUserRepository(UserRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create_expenses(self, user: User):
-        print("create user", user)
-
-    async def get_expenses_by_month(self, id: str):
-        print("get user")
+    async def create_user(self, user: User) -> User:
+        user_created = self.session.add(user)
+        await self.session.commit()
+        return user_created

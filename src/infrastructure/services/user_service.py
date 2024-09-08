@@ -28,9 +28,12 @@ class UserService:
         hasheg_password = self.auth_service.hash_password(user_data.password)
         user.password = hasheg_password
 
-        self.sesion.add(user)
-        await self.sesion.commit()
-        return user
+        try:
+            await self.repository.create_user(user)
+            return user
+
+        except Exception as e:
+            raise e
 
     async def _search_user_by_email(self, email_user: str):
         query = select(User).where(User.email == email_user)
