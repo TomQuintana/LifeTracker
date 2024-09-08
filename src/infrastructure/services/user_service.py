@@ -2,7 +2,8 @@ from datetime import timedelta
 
 from fastapi import HTTPException, status
 from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
+
+from src.domain.user.user_repository import UserRepository
 
 from ..services.auth import Auth
 from ..services.cotization import Cotization
@@ -11,11 +12,10 @@ from ...domain.user.model import User
 
 
 class UserService:
-    auth_service = Auth()
-
-    def __init__(self, session_db: AsyncSession):
-        self.sesion = session_db
+    def __init__(self, repository: UserRepository):
+        self.repository = repository
         self.ACCESS_TOKEN_EXPIRE_MINUTES = 30
+        self.auth_service = Auth()
 
     async def create_user(self, user_data) -> User:
         crypto_currency = "USDT"
