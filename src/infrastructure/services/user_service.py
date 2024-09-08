@@ -1,9 +1,9 @@
 from datetime import timedelta
 
-from fastapi import HTTPException, status
 from sqlmodel import select
 
 from src.domain.user.user_repository import UserRepository
+from src.infrastructure.utils.alerts import alert_not_found_resource
 
 from ..services.auth import Auth
 from ..services.cotization import Cotization
@@ -47,13 +47,11 @@ class UserService:
         try:
             user = await self.repository.get_user_by_email(email)
             if not user:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+                alert_not_found_resource(detail="User not found")
 
             is_password_valid = self.auth_service.verify_password(password, user.password)
             if not is_password_valid:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
-                )
+                alert_not_found_resource(detail="Invalid Credentials")
 
             access_token_expires = timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
             user_id_str = str(user.id)
