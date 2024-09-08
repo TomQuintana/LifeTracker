@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, status
 
-from ...application.dto.books import BookToCreate
-
-from ..dependecy import get_book_service
+from ...application.dto.books import BookToCreate, BookToUpdate
+from ..dependency.book_dependecy import get_book_service
 from ..services.auth import Auth
 from ..services.book_services import BookService
 from ..utils.alerts import success_book_deleted
@@ -38,12 +37,10 @@ async def delete_books_by_uuid(uuid: str, book_service: BookService = Depends(ge
     return success_book_deleted()
 
 
-# @router.put("/{uuid}", status_code=status.HTTP_200_OK)
-# async def update_books_by_uuid(
-#     uuid: str,
-#     data: BookToUpdat,
-#     session: AsyncSession = Depends(get_session),
-# ):
-#     #book_service = BookService(session)
-#     await book_service.update_books_by_uuid(data, uuid)  # type: ignore
-#     return {"message": "Book updated successfully"}
+@router.patch("/{uuid}", status_code=status.HTTP_200_OK)
+async def update_books_by_uuid(
+    uuid: str, data: BookToUpdate, book_service: BookService = Depends(get_book_service)
+):
+    # book_service = BookService(session)
+    await book_service.update_books_by_uuid(uuid, data)
+    return {"message": "Book updated successfully"}
