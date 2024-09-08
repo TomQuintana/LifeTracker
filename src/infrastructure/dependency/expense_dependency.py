@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db.db_manager import get_session
-from ...infrastructure.repository.SQLModel.sqlModel_expenses import SqlModelExpenseRepository
+from ...infrastructure.repository.SQLModel.sql_model_expenses import SqlModelExpenseRepository
 from ..services.expense_service import ExpenseService
 
 
