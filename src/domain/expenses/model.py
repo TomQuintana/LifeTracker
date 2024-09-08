@@ -18,3 +18,4 @@ class Expense(SQLModel, table=True):
     coutes: str | None = None
     month: int = datetime.now().month
     date: str | None = None
+    user_id: UUID

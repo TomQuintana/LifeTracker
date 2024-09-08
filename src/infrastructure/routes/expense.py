@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 from fastapi.security import OAuth2PasswordBearer
@@ -21,10 +22,11 @@ router = APIRouter(
 
 @router.get("/", status_code=HTTPStatus.OK)
 async def get_data(
+    token: Annotated[str, Depends(oauth2_scheme)],
     month: int = Query(None, description="The month for filtering expenses"),
     expense_service: ExpenseService = Depends(get_expense_service),
 ):
-    data_spend = await expense_service.fetch_data(month)
+    data_spend = await expense_service.fetch_data(month, token)
     return data_spend
 
 
@@ -39,7 +41,9 @@ async def get_total(
 
 @router.post("/", status_code=HTTPStatus.CREATED)
 async def create_expense(
-    data: ExpenseRequest, expense_service: ExpenseService = Depends(get_expense_service)
+    token: Annotated[str, Depends(oauth2_scheme)],
+    data: ExpenseRequest,
+    expense_service: ExpenseService = Depends(get_expense_service),
 ):
-    expense = await expense_service.create_expense(data)
+    expense = await expense_service.create_expense(data, token)
     return expense

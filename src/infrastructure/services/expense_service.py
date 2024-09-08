@@ -1,3 +1,4 @@
+from src.infrastructure.services.auth import Auth
 from ...domain.expenses.expenses_repository import ExpenseRepository
 from ...domain.expenses.model import Expense
 from ...domain.products.model import Products
@@ -13,19 +14,24 @@ class ExpenseService:
     def __init__(self, repository: ExpenseRepository):
         self.repository = repository
         self.cotization_service = Cotization(crypto_currency)
+        self.auth = Auth()
 
     def _valid_is_month_pass(self, month):
         if not month:
             bad_request("Month is required")
 
-    async def create_expense(self, data):
+    async def create_expense(self, data, token):
         if not valid_type_input(data.type):
             raise ValueError("Invalid type input")
 
         try:
+            token_decoded = self.auth.check_payload(token)
+            user_id = token_decoded.get("user_id")
+
             cotization = await self.cotization_service.calculate_cotization(data.price_ARS)
             expense_data = data.dict()
             expenses_entity = Expense(**expense_data)
+            expenses_entity.user_id = user_id
             expenses_entity.price_USDT = cotization
 
             await self.repository.create_expenses(expenses_entity)
@@ -62,10 +68,13 @@ class ExpenseService:
         except Exception as e:
             raise e
 
-    async def fetch_data(self, month: int):
+    async def fetch_data(self, month: int, token: str):
         self._valid_is_month_pass(month)
 
-        expenses = await self.repository.get_expenses_by_month(month)
+        token_decoded = self.auth.check_payload(token)
+        user_id = token_decoded.get("user_id")
+
+        expenses = await self.repository.get_expenses_by_month(month, user_id)
 
         data_response = []
         for expense in expenses:

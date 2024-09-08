@@ -16,13 +16,12 @@ class SqlModelExpenseRepository(ExpenseRepository):
         return expense_created
 
     async def create_products(self, product: Products):
-        print("product", product)
         product_created = self.session.add(product)
         await self.session.commit()
         return product_created
 
-    async def get_expenses_by_month(self, month: int):
-        query = select(Expense).where(Expense.month == month)
+    async def get_expenses_by_month(self, month: int, user_id: str):
+        query = select(Expense).where(Expense.user_id == user_id, Expense.month == month)
         result = await self.session.exec(query)
         return result.all()
 

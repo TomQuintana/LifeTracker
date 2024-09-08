@@ -14,7 +14,7 @@ class ExpenseRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_expenses_by_month(self, month: int):
+    async def get_expenses_by_month(self, month: int, user_id: str):
         pass
 
     @abstractmethod
