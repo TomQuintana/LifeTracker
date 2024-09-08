@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from sqlmodel import SQLModel
 
 
 class BookSchema(BaseModel):
@@ -6,12 +7,17 @@ class BookSchema(BaseModel):
     author: str | None = None
     type: str | None = None
     description: str | None = None
-    status: str = "unread"
+    status: str | None = None
     physically: bool | None = None
 
 
-class BookToUpdat(BookSchema):
-    pass
+class BookToUpdate(SQLModel):
+    title: str | None = None
+    author: str | None = None
+    type: str | None = None
+    description: str | None = None
+    status: str | None = None
+    physically: bool | None = None
 
 
 class BookToCreate(BookSchema):

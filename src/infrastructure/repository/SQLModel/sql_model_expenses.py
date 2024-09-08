@@ -1,4 +1,4 @@
-from sqlmodel import select
+from sqlmodel import UUID, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.domain.expenses.model import Expense
@@ -20,7 +20,7 @@ class SqlModelExpenseRepository(ExpenseRepository):
         await self.session.commit()
         return product_created
 
-    async def get_expenses_by_month(self, month: int, user_id: str):
+    async def get_expenses_by_month(self, month: int, user_id: UUID):
         query = select(Expense).where(Expense.user_id == user_id, Expense.month == month)
         result = await self.session.exec(query)
         return result.all()

@@ -3,6 +3,7 @@ from ...domain.expenses.expenses_repository import ExpenseRepository
 from ...domain.expenses.model import Expense
 from ...domain.products.model import Products
 from ...infrastructure.utils.alerts import bad_request
+from ...infrastructure.utils.decoed_user_id import decoded_user_id
 from ...infrastructure.utils.valid_type_input import valid_type_input
 from .cotization import Cotization
 from ...infrastructure.constants.types_expenses import EXPENSE_TYPES
@@ -25,8 +26,7 @@ class ExpenseService:
             raise ValueError("Invalid type input")
 
         try:
-            token_decoded = self.auth.check_payload(token)
-            user_id = token_decoded.get("user_id")
+            user_id = decoded_user_id(token)
 
             cotization = await self.cotization_service.calculate_cotization(data.price_ARS)
             expense_data = data.dict()
@@ -71,8 +71,7 @@ class ExpenseService:
     async def fetch_data(self, month: int, token: str):
         self._valid_is_month_pass(month)
 
-        token_decoded = self.auth.check_payload(token)
-        user_id = token_decoded.get("user_id")
+        user_id = decoded_user_id(token)
 
         expenses = await self.repository.get_expenses_by_month(month, user_id)
 
@@ -106,9 +105,11 @@ class ExpenseService:
 
         return data_response
 
-    async def fetch_total(self, month: int):
+    async def fetch_total(self, month: int, token):
+        user_id = decoded_user_id(token)
+
         self._valid_is_month_pass(month)
-        expenses_data = await self.repository.get_expenses_by_month(month)
+        expenses_data = await self.repository.get_expenses_by_month(month, user_id)
 
         totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
 

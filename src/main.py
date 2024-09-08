@@ -4,12 +4,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .infrastructure.middleware.origins import origins
-from .infrastructure.middleware.verify_token_middleware import verify_token_middleware
 
 from .infrastructure.db.db_manager import init_db
 from .infrastructure.routes.book import router as book_router
 from .infrastructure.routes.expense import router as expense_router
-# from .infrastructure.routes import user as user_router
+from .infrastructure.routes.user import router as user_router
 
 
 @asynccontextmanager
@@ -31,8 +30,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.middleware("http")(verify_token_middleware)
-
-# app.include_router(user_router)
+app.include_router(user_router)
 app.include_router(expense_router)
 app.include_router(book_router)
