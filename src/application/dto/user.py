@@ -9,3 +9,8 @@ class UserSchema(BaseModel):
     is_active: bool = True
     budget_ARS: float
     budget_USDT: float | None = None
+
+
+class UserLogin(BaseModel):
+    email: str
+    password: str

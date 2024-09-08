@@ -6,7 +6,7 @@ from sqlmodel import Column, Field, SQLModel
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
-    uuid: UUID = Field(sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4))
+    id: UUID = Field(sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4))
     email: str
     password: str
     first_name: str

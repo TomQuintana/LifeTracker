@@ -8,6 +8,15 @@ class BookService:
     def __init__(self, repository: BookRepository):
         self.repository = repository
 
+    async def _is_book_exist(self, uuid: str) -> bool:
+        try:
+            book = await self.repository.findBookById(uuid)
+            if book is not None:
+                return True
+            return False
+        except Exception as e:
+            raise e
+
     async def create_book(self, data) -> Book:
         try:
             book_data = data.dict()
@@ -51,8 +60,35 @@ class BookService:
         except Exception as e:
             raise e
 
-    #
-    # async def update_books_by_uuid(self, update_data: BookToUpdat, uuid: str):
+    async def update_books_by_uuid(self, uuid: str, data):
+        try:
+            books_status = await self._is_book_exist(uuid)
+
+            if not books_status:
+                alert_not_found_resource("Book not found")
+
+            book_data = await self.repository.findBookById(uuid)
+            data_to_updated = data.dict()
+            print(data_to_updated)
+
+            for key, value in data_to_updated.items():
+                setattr(book_data, key, value)
+
+            book_updated = await self.repository.updateBookById(book_data)
+            return book_updated
+
+        # for key, value in data_to_updated.items():
+        #     # Solo actualizar si el campo no es None o se preserva el valor actual
+        #     if value is not None:
+        #         setattr(book_data, key, value)
+        #     else:
+        #         # Mantener el valor existente si no se proporciona uno nuevo
+        #         current_value = getattr(book_data, key)
+        #         setattr(book_data, key, current_value)
+        #
+        except Exception as e:
+            raise e
+
     #     query = select(Book).where(Book.uuid == uuid)
     #     result = await self.session.exec(query)
     #     book_to_update = result.one()

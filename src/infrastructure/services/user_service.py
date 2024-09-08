@@ -35,35 +35,35 @@ class UserService:
         except Exception as e:
             raise e
 
+    def fetch_user(self, email: str):
+        return self.repository.get_user_by_email(email)
+
     async def _search_user_by_email(self, email_user: str):
         query = select(User).where(User.email == email_user)
         user_exist = await self.sesion.exec(query)
         return user_exist.first()
 
-    async def login(self, email: str, password: str) -> str:
+    async def login(self, email: str, password: str):
         try:
-            is_user_exist = await self._search_user_by_email(email)
-
-            if not is_user_exist:
+            user = await self.repository.get_user_by_email(email)
+            if not user:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-            is_password_valid = self.auth_service.verify_password(password, is_user_exist.password)
+            is_password_valid = self.auth_service.verify_password(password, user.password)
             if not is_password_valid:
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
                 )
 
-            budget_usdt = is_user_exist.budget_USDT
-            if budget_usdt is None:
-                budget_usdt = 0.0
-
             access_token_expires = timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
+            user_id_str = str(user.id)
 
             token = self.auth_service.generate_token(
                 email,
-                budget_usdt,
+                user_id_str,
                 access_token_expires,
             )
+
             return token
 
         except Exception as e:

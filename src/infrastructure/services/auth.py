@@ -33,11 +33,11 @@ class Auth:
 
     def generate_token(
         self,
-        email: str,
-        budget_usdt: float,
+        user_email: str,
+        user_id: str,
         expires_delta: timedelta | None = None,
     ) -> str:
-        encode = {"email_user": email, "user_budge": budget_usdt}
+        encode = {"email_user": user_email, "user_id": user_id}
 
         if expires_delta:
             expire = datetime.now(timezone.utc) + expires_delta

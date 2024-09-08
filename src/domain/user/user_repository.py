@@ -8,6 +8,6 @@ class UserRepository(ABC):
     async def create_user(self, user: User) -> User:
         pass
 
-    # @abstractmethod
-    # async def get_user_by_id(self, id: str):
-    #     pass
+    @abstractmethod
+    async def get_user_by_email(self, email: str) -> User:
+        pass

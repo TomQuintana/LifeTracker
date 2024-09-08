@@ -20,3 +20,7 @@ class BookRepository(ABC):
     @abstractmethod
     async def createBook(self, book: Book) -> Book:
         pass
+
+    @abstractmethod
+    async def updateBookById(self, data) -> None:
+        pass
