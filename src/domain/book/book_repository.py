@@ -10,7 +10,7 @@ class BookRepository(ABC):
         pass
 
     @abstractmethod
-    async def findBooks(self) -> list[BookSchema]:
+    async def findBooks(self, user_id) -> list[BookSchema]:
         pass
 
     @abstractmethod

@@ -1,4 +1,5 @@
 from src.domain.book.model import Book
+from src.infrastructure.services.auth import Auth
 from ..utils.alerts import alert_not_found_resource
 
 from ...domain.book.book_repository import BookRepository
@@ -7,6 +8,7 @@ from ...domain.book.book_repository import BookRepository
 class BookService:
     def __init__(self, repository: BookRepository):
         self.repository = repository
+        self.auth = Auth()
 
     async def _is_book_exist(self, uuid: str) -> bool:
         try:
@@ -17,10 +19,15 @@ class BookService:
         except Exception as e:
             raise e
 
-    async def create_book(self, data) -> Book:
+    async def create_book(self, data, token) -> Book:
         try:
+            token_decoded = self.auth.check_payload(token)
+            user_id = token_decoded.get("user_id")
+
             book_data = data.dict()
+            book_data["user_id"] = user_id
             book_entity = Book(**book_data)
+
             await self.repository.createBook(book_entity)
 
             return book_entity
@@ -28,9 +35,12 @@ class BookService:
         except Exception as e:
             raise e
 
-    async def get_books(self):
+    async def get_books(self, token: str):
         try:
-            book_data = await self.repository.findBooks()
+            token_decoded = self.auth.check_payload(token)
+            user_id = token_decoded.get("user_id")
+
+            book_data = await self.repository.findBooks(user_id)
         except Exception as e:
             raise e
 

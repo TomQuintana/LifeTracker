@@ -16,8 +16,8 @@ class SqlModelBookRepository(BookRepository):
         result = await self.session.exec(query)
         return result.first()
 
-    async def findBooks(self) -> list[BookSchema]:
-        query = select(Book)
+    async def findBooks(self, user_id) -> list[BookSchema]:
+        query = select(Book).where(Book.user_id == user_id)
         result = await self.session.exec(query)
         return result.all()
 
