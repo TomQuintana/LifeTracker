@@ -7,8 +7,8 @@ from ...infrastructure.utils.decoed_user_id import decoded_user_id
 from ...infrastructure.utils.valid_type_input import valid_type_input
 from .cotization import Cotization
 from ...infrastructure.constants.types_expenses import EXPENSE_TYPES
-
-crypto_currency = "USDT"
+from ...infrastructure.constants.cryptocurrency import crypto_currency
+from ...infrastructure.utils.expenses_utils import valid_is_month_pass
 
 
 class ExpenseService:
@@ -16,10 +16,6 @@ class ExpenseService:
         self.repository = repository
         self.cotization_service = Cotization(crypto_currency)
         self.auth = Auth()
-
-    def _valid_is_month_pass(self, month):
-        if not month:
-            bad_request("Month is required")
 
     async def create_expense(self, data, token):
         if not valid_type_input(data.type):
@@ -69,7 +65,9 @@ class ExpenseService:
             raise e
 
     async def fetch_data(self, month: int, token: str):
-        self._valid_is_month_pass(month)
+        valid_month = valid_is_month_pass(month)
+        if not valid_month:
+            bad_request("Month is required")
 
         user_id = decoded_user_id(token)
 
@@ -108,7 +106,10 @@ class ExpenseService:
     async def fetch_total(self, month: int, token):
         user_id = decoded_user_id(token)
 
-        self._valid_is_month_pass(month)
+        valid_month = valid_is_month_pass(month)
+        if not valid_month:
+            bad_request("Month is required")
+
         expenses_data = await self.repository.get_expenses_by_month(month, user_id)
 
         totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
