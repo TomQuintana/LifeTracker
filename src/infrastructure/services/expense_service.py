@@ -2,25 +2,27 @@ from src.infrastructure.services.auth import Auth
 from ...domain.expenses.expenses_repository import ExpenseRepository
 from ...domain.expenses.model import Expense
 from ...domain.products.model import Products
-from ...infrastructure.utils.alerts import bad_request
+
+# from ...infrastructure.utils.alerts import bad_request
 from ...infrastructure.utils.decoed_user_id import decoded_user_id
-from ...infrastructure.utils.valid_type_input import valid_type_input
+
+# from ...infrastructure.utils.valid_type_input import valid_type_input
 from .cotization import Cotization
 from ...infrastructure.constants.types_expenses import EXPENSE_TYPES
-from ...infrastructure.constants.cryptocurrency import crypto_currency
-from ...infrastructure.utils.expenses_utils import valid_is_month_pass
+from ...infrastructure.constants.cryptocurrency import crypto_currency_usdt
+# from ...infrastructure.utils.expenses_utils import valid_is_month_pass
 
 
 class ExpenseService:
     def __init__(self, repository: ExpenseRepository):
         self.repository = repository
-        self.cotization_service = Cotization(crypto_currency)
+        self.cotization_service = Cotization(crypto_currency_usdt)
         self.auth = Auth()
 
     async def create_expense(self, data, token):
-        if not valid_type_input(data.type):
-            raise ValueError("Invalid type input")
-
+        # if not valid_type_input(data.type):
+        #     raise ValueError("Invalid type input")
+        #
         try:
             user_id = decoded_user_id(token)
 
@@ -65,9 +67,10 @@ class ExpenseService:
             raise e
 
     async def fetch_data(self, month: int, token: str):
-        valid_month = valid_is_month_pass(month)
-        if not valid_month:
-            bad_request("Month is required")
+        print(month)
+        # valid_month = valid_is_month_pass(month)
+        # if not valid_month:
+        #     bad_request("Month is required")
 
         user_id = decoded_user_id(token)
 
@@ -105,16 +108,26 @@ class ExpenseService:
 
     async def fetch_total(self, month: int, token):
         user_id = decoded_user_id(token)
+        print(user_id)
 
-        valid_month = valid_is_month_pass(month)
-        if not valid_month:
-            bad_request("Month is required")
+        # valid_month = valid_is_month_pass(month)
+        # if not valid_month:
+        #     bad_request("Month is required")
 
         expenses_data = await self.repository.get_expenses_by_month(month, user_id)
+        print(expenses_data)
 
         totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
 
         for expense in expenses_data:
+            print(expenses_data)
             totals[expense.type] += expense.price_ARS
 
-        return totals
+        final_totals = 0
+        for key, value in totals.items():
+            final_totals += value
+
+        return {
+            "total": final_totals,
+            "expenses": totals,
+        }
