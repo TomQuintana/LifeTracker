@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from src.application.dto.user import UserSchema, UserLogin
 
@@ -8,17 +8,18 @@ from ..services.user_service import UserService
 router = APIRouter(prefix="/api/user", tags=["User"])
 
 
-@router.get("/{email}", status_code=status.HTTP_200_OK)
-async def get_user(email: str, user_service: UserService = Depends(get_user_service)):
+@router.get("/", status_code=status.HTTP_200_OK)
+async def get_user(
+    email: str = Query(None, description="email"),
+    user_service: UserService = Depends(get_user_service),
+):
     user = await user_service.fetch_user(email)
-    print(user)
     return user
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(data: UserSchema, user_service: UserService = Depends(get_user_service)):
     user = await user_service.create_user(data)
-    print(user)
     return user
 
 

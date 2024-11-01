@@ -21,6 +21,7 @@ class SqlModelExpenseRepository(ExpenseRepository):
         return product_created
 
     async def get_expenses_by_month(self, month: int, user_id: UUID):
+        print(month, user_id)
         query = select(Expense).where(Expense.user_id == user_id, Expense.month == month)
         result = await self.session.exec(query)
         return result.all()

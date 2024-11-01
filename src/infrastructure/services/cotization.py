@@ -17,9 +17,11 @@ class Cotization:
 
         if response.status_code == 200:
             data = response.json()
+            print(data)
             return data["RAW"]["USDT"]["ARS"]["PRICE"]
 
     async def calculate_cotization(self, buy_price: float) -> float:
+        print(self.crypto_currency)
         cotization_value: float | None = await self._obtain()
         cotization_market_int = int(cotization_value or 0)
         total_cotization: int | float = round((buy_price / cotization_market_int), 2)
