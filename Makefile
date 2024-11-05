@@ -1,5 +1,5 @@
 run:
-	python3 runserver.py
+	poetry run python runserver.py
 
 lint:
 	ruff check

@@ -59,9 +59,8 @@ This project is a backend service designed to help manage personal expenses, tra
 
 
 ## Usage
-- Generate a virtual enviroment by `python3 -m venv <name>`
-- Activate enviroment `source .<name>/bin/activate`
-- Then install a necesary package in your enviroment using `pip install -r requirements.txt`
+- Install a necesary librarys `poetry install`
+- Activate enviroment `poetry shell`
 - Setup database execute a terminal `docker compose up -d` for create a postgres database
 - For the last run a server with `make run` in port 3000
 
