@@ -1,12 +1,17 @@
+from abc import ABC, abstractmethod
 from typing import Optional
-from abc import abstractmethod, ABC
-from ...domain.book.model import Book
+
 from ...application.dto.books import BookSchema
+from ...domain.book.model import Book
 
 
 class BookRepository(ABC):
     @abstractmethod
     async def findBookById(self, uuid: str) -> Optional[BookSchema]:
+        pass
+
+    @abstractmethod
+    async def findBookByTitle(self, uuid: str) -> Optional[BookSchema]:
         pass
 
     @abstractmethod

@@ -1,8 +1,8 @@
 from src.domain.book.model import Book
 from src.infrastructure.services.auth import Auth
-from ..utils.alerts import alert_not_found_resource
 
 from ...domain.book.book_repository import BookRepository
+from ..utils.alerts import alert_book, alert_not_found_resource
 
 
 class BookService:
@@ -20,6 +20,10 @@ class BookService:
             raise e
 
     async def create_book(self, data, token) -> Book:
+        book_exist = await self.repository.findBookByTitle(data.title)
+        if book_exist:
+            alert_book("Book already exist", 409)
+
         try:
             token_decoded = self.auth.check_payload(token)
             user_id = token_decoded.get("user_id")

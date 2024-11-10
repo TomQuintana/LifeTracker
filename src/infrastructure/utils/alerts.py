@@ -11,3 +11,7 @@ def alert_not_found_resource(detail: str = "Resource not found"):
 
 def bad_request(detail: str = "Bad request"):
     raise HTTPException(status_code=400, detail=detail)
+
+
+def alert_book(detail: str = "Resource not found", status_code: int = 404):
+    raise HTTPException(status_code=status_code, detail=detail)
