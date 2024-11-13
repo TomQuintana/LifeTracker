@@ -12,7 +12,12 @@ class SqlModelBookRepository(BookRepository):
         self.session = session
 
     async def findBookById(self, uuid: str) -> BookSchema | None:
-        query = select(Book).where(Book.uuid == uuid)
+        query = select(Book).where(Book.id == uuid)
+        result = await self.session.exec(query)
+        return result.first()
+
+    async def findBookByTitle(self, title: str):
+        query = select(Book).where(Book.title == title)
         result = await self.session.exec(query)
         return result.first()
 
@@ -38,3 +43,8 @@ class SqlModelBookRepository(BookRepository):
         book_updated = self.session.add(data)
         await self.session.commit()
         return book_updated
+
+    async def filterBooks(self, filter_type: str):
+        query = select(Book).where(filter_type == Book.type)
+        result = await self.session.exec(query)
+        return result.all()

@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from fastapi.security import OAuth2PasswordBearer
 
 from ...application.dto.books import BookToCreate, BookToUpdate
@@ -34,19 +34,29 @@ async def get_books(
     return books
 
 
-@router.get("/{uuid}", status_code=status.HTTP_200_OK)
-async def get_books_by_filter(uuid: str, book_service: BookService = Depends(get_book_service)):
-    book = await book_service.get_books_by_filter(uuid)
-    return book
+@router.get("/topics", status_code=status.HTTP_200_OK)
+async def get_books_types(book_service: BookService = Depends(get_book_service)):
+    print("topics")
+    list_types = await book_service.list_types()
+    return {"book Topic": list_types}
 
 
-@router.delete("/{uuid}", status_code=status.HTTP_200_OK)
+@router.get("/filter", status_code=status.HTTP_200_OK)
+async def get_books_by_type(
+    type: str = Query(None, description="The month for filtering expenses"),
+    book_service: BookService = Depends(get_book_service),
+):
+    books = await book_service.get_books_by_filter(type)
+    return books
+
+
+@router.delete("/{id}", status_code=status.HTTP_200_OK)
 async def delete_books_by_uuid(uuid: str, book_service: BookService = Depends(get_book_service)):
     await book_service.delete_books_by_uuid(uuid)
     return success_book_deleted()
 
 
-@router.patch("/{uuid}", status_code=status.HTTP_200_OK)
+@router.patch("/{id}", status_code=status.HTTP_200_OK)
 async def update_books_by_uuid(
     uuid: str, data: BookToUpdate, book_service: BookService = Depends(get_book_service)
 ):

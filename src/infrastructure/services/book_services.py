@@ -1,4 +1,5 @@
 from src.domain.book.model import Book
+from src.infrastructure.constants.books_types import BOOKS_TYPES
 from src.infrastructure.services.auth import Auth
 
 from ...domain.book.book_repository import BookRepository
@@ -23,6 +24,10 @@ class BookService:
         book_exist = await self.repository.findBookByTitle(data.title)
         if book_exist:
             alert_book("Book already exist", 409)
+
+        valid_type = data.type in BOOKS_TYPES
+        if not valid_type:
+            alert_book("Book topic not valid", 400)
 
         try:
             token_decoded = self.auth.check_payload(token)
@@ -50,9 +55,10 @@ class BookService:
 
         return book_data
 
-    async def get_books_by_filter(self, uuid: str):
+    async def get_books_by_filter(self, type: str):
         try:
-            book_data = await self.repository.findBookById(uuid)
+            book_data = await self.repository.filterBooks(type)
+            print(book_data)
 
             if book_data is None:
                 alert_not_found_resource("Book not found")
@@ -116,3 +122,7 @@ class BookService:
     #
     #     await self.session.commit()
     #     return self.session.refresh(book_to_update)
+
+    async def list_types(self):
+        print("types")
+        return BOOKS_TYPES

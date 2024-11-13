@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Sequence
 
 from ...application.dto.books import BookSchema
 from ...domain.book.model import Book
@@ -28,4 +28,8 @@ class BookRepository(ABC):
 
     @abstractmethod
     async def updateBookById(self, data) -> None:
+        pass
+
+    @abstractmethod
+    async def filterBooks(self, filter_type: str) -> Sequence[Book]:
         pass
