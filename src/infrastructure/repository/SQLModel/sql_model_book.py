@@ -1,3 +1,4 @@
+from sqlalchemy.sql.operators import like_op
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -21,8 +22,9 @@ class SqlModelBookRepository(BookRepository):
         result = await self.session.exec(query)
         return result.first()
 
-    async def findBooks(self, user_id) -> list[BookSchema]:
-        query = select(Book).where(Book.user_id == user_id)
+    async def findBooks(self, user_id, limit, offset) -> list[BookSchema]:
+        query = select(Book).offset(offset).limit(limit).where(Book.user_id == user_id)
+        # session.exec(select(Hero).offset(offset).limit(limit)).all()
         result = await self.session.exec(query)
         return result.all()
 
@@ -46,5 +48,12 @@ class SqlModelBookRepository(BookRepository):
 
     async def filterBooks(self, filter_type: str):
         query = select(Book).where(filter_type == Book.type)
+        result = await self.session.exec(query)
+        return result.all()
+
+    async def searchBook(self, book_title: str):
+        # query = select(Book).where(Book.title == book_title)
+        query = select(Book).filter(like_op(Book.title, f"%{book_title}%"))
+        # query = select(Book).where(Book.title.like(f"%{book_title}%"))
         result = await self.session.exec(query)
         return result.all()

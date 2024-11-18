@@ -27,16 +27,16 @@ async def create_book(
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_books(
     token: Annotated[str, Depends(oauth2_scheme)],
+    limit: int = Query(None, description="The limit of data per page"),
+    offset: int = Query(None, description="The month for filtering expenses"),
     book_service: BookService = Depends(get_book_service),
 ):
-    print(token)
-    books = await book_service.get_books(token)
+    books = await book_service.get_books(token, limit, offset)
     return books
 
 
 @router.get("/topics", status_code=status.HTTP_200_OK)
 async def get_books_types(book_service: BookService = Depends(get_book_service)):
-    print("topics")
     list_types = await book_service.list_types()
     return {"book Topic": list_types}
 
@@ -63,3 +63,12 @@ async def update_books_by_uuid(
     # book_service = BookService(session)
     await book_service.update_books_by_uuid(uuid, data)
     return {"message": "Book updated successfully"}
+
+
+@router.get("/search", status_code=status.HTTP_200_OK)
+async def search_book(
+    title: str = Query(None, description="The month for filtering expenses"),
+    book_service: BookService = Depends(get_book_service),
+):
+    books = await book_service.search_book(title)
+    return books

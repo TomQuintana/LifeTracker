@@ -15,7 +15,7 @@ class BookRepository(ABC):
         pass
 
     @abstractmethod
-    async def findBooks(self, user_id) -> list[BookSchema]:
+    async def findBooks(self, user_id, limit, offset) -> list[BookSchema]:
         pass
 
     @abstractmethod
@@ -32,4 +32,8 @@ class BookRepository(ABC):
 
     @abstractmethod
     async def filterBooks(self, filter_type: str) -> Sequence[Book]:
+        pass
+
+    @abstractmethod
+    async def searchBook(self, book_title: str) -> Sequence[Book]:
         pass

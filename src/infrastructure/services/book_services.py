@@ -25,6 +25,7 @@ class BookService:
         if book_exist:
             alert_book("Book already exist", 409)
 
+        print(data.type)
         valid_type = data.type in BOOKS_TYPES
         if not valid_type:
             alert_book("Book topic not valid", 400)
@@ -44,21 +45,23 @@ class BookService:
         except Exception as e:
             raise e
 
-    async def get_books(self, token: str):
+    async def get_books(self, token: str, limit: int, offset: int):
         try:
             token_decoded = self.auth.check_payload(token)
             user_id = token_decoded.get("user_id")
 
-            book_data = await self.repository.findBooks(user_id)
+            book_data = await self.repository.findBooks(user_id, limit, offset)
+            next_offset = offset + limit if len(book_data) == limit else None
+
         except Exception as e:
             raise e
 
-        return book_data
+        return {"data": book_data, "next_offset": next_offset}
 
     async def get_books_by_filter(self, type: str):
+        print(type)
         try:
             book_data = await self.repository.filterBooks(type)
-            print(book_data)
 
             if book_data is None:
                 alert_not_found_resource("Book not found")
@@ -126,3 +129,11 @@ class BookService:
     async def list_types(self):
         print("types")
         return BOOKS_TYPES
+
+    async def search_book(self, book_title: str):
+        print(book_title)
+        try:
+            book_data = await self.repository.searchBook(book_title)
+            return book_data
+        except Exception as e:
+            raise e
