@@ -14,4 +14,5 @@ class Book(SQLModel, table=True):
     physically: bool = False
     description: str | None = None
     notes_location: str | None = None
+    cover: str | None = None
     user_id: UUID

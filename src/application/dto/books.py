@@ -9,6 +9,7 @@ class BookSchema(BaseModel):
     description: str | None = None
     status: str | None = None
     physically: bool | None = None
+    cover: str | None = None
 
 
 class BookToUpdate(SQLModel):
