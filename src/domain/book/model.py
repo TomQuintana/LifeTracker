@@ -1,12 +1,11 @@
-from uuid import UUID, uuid4
+from uuid import UUID
 
-import sqlalchemy.dialects.postgresql as pg
-from sqlmodel import Column, Field, SQLModel
+from sqlmodel import Field, SQLModel
 
 
 class Book(SQLModel, table=True):
     __tablename__ = "books"  # type: ignore
-    id: UUID = Field(sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4))
+    id: int | None = Field(default=None, primary_key=True)
     title: str
     author: str
     type: str | None = None
