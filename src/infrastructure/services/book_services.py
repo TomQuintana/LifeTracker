@@ -25,7 +25,6 @@ class BookService:
         if book_exist:
             alert_book("Book already exist", 409)
 
-        print(data.type)
         valid_type = data.type in BOOKS_TYPES
         if not valid_type:
             alert_book("Book topic not valid", 400)
@@ -39,24 +38,33 @@ class BookService:
             book_entity = Book(**book_data)
 
             await self.repository.createBook(book_entity)
-
             return book_entity
 
         except Exception as e:
+            print(e)
             raise e
 
-    async def get_books(self, token: str, limit: int, offset: int):
+    async def get_books(self, token: str, cursor: int):
         try:
             token_decoded = self.auth.check_payload(token)
             user_id = token_decoded.get("user_id")
 
-            book_data = await self.repository.findBooks(user_id, limit, offset)
-            next_offset = offset + limit if len(book_data) == limit else None
+            next_video = 1
+            books_per_page = 2
+            limit = books_per_page + next_video
+
+            book_data = await self.repository.findBooks(user_id, cursor, limit)
+
+            next_offset = next_video + books_per_page
+
+            if len(book_data) == books_per_page:
+                print(f"Pop, {book_data.pop()}")
+                next_offset = book_data.pop()
 
         except Exception as e:
             raise e
 
-        return {"data": book_data, "next_offset": next_offset}
+        return {"data": book_data, "cursor": next_offset}
 
     async def get_books_by_filter(self, type: str):
         print(type)
@@ -70,14 +78,14 @@ class BookService:
         except Exception as e:
             raise e
 
-    async def delete_books_by_uuid(self, uuid: str):
+    async def delete_books_by_uuid(self, id: int):
         try:
-            is_book_exist = await self.repository.findBookById(uuid)
+            is_book_exist = await self.repository.findBookById(id)
 
             if is_book_exist is None:
                 alert_not_found_resource("Book not found")
 
-            book_to_delete = await self.repository.removeBookById(uuid)
+            book_to_delete = await self.repository.removeBookById(id)
 
             return book_to_delete
         except Exception as e:

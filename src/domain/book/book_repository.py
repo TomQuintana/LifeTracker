@@ -7,7 +7,7 @@ from ...domain.book.model import Book
 
 class BookRepository(ABC):
     @abstractmethod
-    async def findBookById(self, uuid: str) -> Optional[BookSchema]:
+    async def findBookById(self, id) -> Optional[BookSchema]:
         pass
 
     @abstractmethod
@@ -15,11 +15,11 @@ class BookRepository(ABC):
         pass
 
     @abstractmethod
-    async def findBooks(self, user_id, limit, offset) -> list[BookSchema]:
+    async def findBooks(self, user_id, cursor, limit) -> list[BookSchema]:
         pass
 
     @abstractmethod
-    async def removeBookById(self, uuid: str) -> None:
+    async def removeBookById(self, id) -> None:
         pass
 
     @abstractmethod

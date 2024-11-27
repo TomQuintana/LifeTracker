@@ -27,11 +27,12 @@ async def create_book(
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_books(
     token: Annotated[str, Depends(oauth2_scheme)],
-    limit: int = Query(None, description="The limit of data per page"),
-    offset: int = Query(None, description="The month for filtering expenses"),
+    # limit: int = Query(None, description="The limit of data per page"),
+    # offset: int = Query(None, description="The month for filtering expenses"),
+    cursor: int,
     book_service: BookService = Depends(get_book_service),
 ):
-    books = await book_service.get_books(token, limit, offset)
+    books = await book_service.get_books(token, cursor)
     return books
 
 
@@ -51,8 +52,8 @@ async def get_books_by_type(
 
 
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
-async def delete_books_by_uuid(uuid: str, book_service: BookService = Depends(get_book_service)):
-    await book_service.delete_books_by_uuid(uuid)
+async def delete_books_by_uuid(id: int, book_service: BookService = Depends(get_book_service)):
+    await book_service.delete_books_by_uuid(id)
     return success_book_deleted()
 
 

@@ -12,8 +12,8 @@ class SqlModelBookRepository(BookRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def findBookById(self, uuid: str) -> BookSchema | None:
-        query = select(Book).where(Book.id == uuid)
+    async def findBookById(self, id: str) -> BookSchema | None:
+        query = select(Book).where(Book.id == id)
         result = await self.session.exec(query)
         return result.first()
 
@@ -22,14 +22,15 @@ class SqlModelBookRepository(BookRepository):
         result = await self.session.exec(query)
         return result.first()
 
-    async def findBooks(self, user_id, limit, offset) -> list[BookSchema]:
-        query = select(Book).offset(offset).limit(limit).where(Book.user_id == user_id)
-        # session.exec(select(Hero).offset(offset).limit(limit)).all()
+    async def findBooks(self, user_id, cursor, limit) -> list[BookSchema]:
+        # query = select(Book).offset(offset).limit(limit).where(Book.user_id == user_id)
+        # query = select(Book).where(Book.id >= cursor) if cursor else select(Book)
+        query = select(Book).where(Book.id >= cursor).limit(limit)
         result = await self.session.exec(query)
         return result.all()
 
-    async def removeBookById(self, uuid: str) -> None:
-        query = select(Book).where(Book.uuid == uuid)
+    async def removeBookById(self, id) -> None:
+        query = select(Book).where(Book.id == id)
         result = await self.session.exec(query)
         book_to_delete = result.one()
         await self.session.delete(book_to_delete)
