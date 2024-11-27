@@ -50,21 +50,19 @@ class BookService:
             user_id = token_decoded.get("user_id")
 
             next_video = 1
-            books_per_page = 2
+            books_per_page = 10
             limit = books_per_page + next_video
 
             book_data = await self.repository.findBooks(user_id, cursor, limit)
 
-            next_offset = next_video + books_per_page
-
-            if len(book_data) == books_per_page:
-                print(f"Pop, {book_data.pop()}")
-                next_offset = book_data.pop()
+            next_cursor = None
+            if len(book_data) == limit:
+                next_cursor = book_data.pop().id
 
         except Exception as e:
             raise e
 
-        return {"data": book_data, "cursor": next_offset}
+        return {"data": book_data, "cursor": next_cursor}
 
     async def get_books_by_filter(self, type: str):
         print(type)

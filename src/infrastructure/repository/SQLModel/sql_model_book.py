@@ -23,8 +23,6 @@ class SqlModelBookRepository(BookRepository):
         return result.first()
 
     async def findBooks(self, user_id, cursor, limit) -> list[BookSchema]:
-        # query = select(Book).offset(offset).limit(limit).where(Book.user_id == user_id)
-        # query = select(Book).where(Book.id >= cursor) if cursor else select(Book)
         query = select(Book).where(Book.id >= cursor).limit(limit)
         result = await self.session.exec(query)
         return result.all()
