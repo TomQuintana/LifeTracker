@@ -68,7 +68,7 @@ async def update_books_by_uuid(
 
 @router.get("/search", status_code=status.HTTP_200_OK)
 async def search_book(
-    title: str = Query(None, description="The month for filtering expenses"),
+    title: str = Query(None, description="Book title"),
     book_service: BookService = Depends(get_book_service),
 ):
     books = await book_service.search_book(title)
