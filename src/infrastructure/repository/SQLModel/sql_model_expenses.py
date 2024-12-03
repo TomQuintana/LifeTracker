@@ -1,8 +1,9 @@
-from sqlmodel import UUID, select
+from sqlalchemy.sql.operators import is_not, like_op
+from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.domain.expenses.model import Expense
 from src.domain.expenses.expenses_repository import ExpenseRepository
+from src.domain.expenses.model import Expense
 from src.domain.products.model import Products
 
 
@@ -20,9 +21,18 @@ class SqlModelExpenseRepository(ExpenseRepository):
         await self.session.commit()
         return product_created
 
-    async def get_expenses_by_month(self, month: int, user_id: UUID):
-        print(month, user_id)
-        query = select(Expense).where(Expense.user_id == user_id, Expense.month == month)
+    async def get_expenses_by_month(self, month: int, cursor: int, limit: int):
+        # query = select(Expense).where(
+        #     Expense.user_id == user_id, Expense.month == month
+        # )
+
+        # query = select(Book).where(Book.id >= cursor).limit(limit)
+        query = select(Expense).where(Expense.id >= cursor).limit(limit)
+        result = await self.session.exec(query)
+        return result.all()
+
+    async def get_all_expenses_by_month(self, month: int):
+        query = select(Expense).where(Expense.month == month)
         result = await self.session.exec(query)
         return result.all()
 
@@ -30,3 +40,21 @@ class SqlModelExpenseRepository(ExpenseRepository):
         query = select(Products).where(Products.expense_id == expense_uuid)
         result = await self.session.exec(query)
         return result.all()
+
+    async def search(self, book_title: str):
+        query = select(Expense).filter(like_op(Expense.title, f"%{book_title}%"))
+        result = await self.session.exec(query)
+        return result.all()
+
+    async def cuotes(self):
+        query = select(Expense).where(is_not(Expense.coutes, None))
+        result = await self.session.exec(query)
+        return result.all()
+
+    async def delete_expense(self, id: int):
+        query = select(Expense).where(Expense.id == id)
+        result = await self.session.exec(query)
+        id_expense = result.one()
+        await self.session.delete(id_expense)
+        await self.session.commit()
+        return

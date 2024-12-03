@@ -1,8 +1,7 @@
 from datetime import datetime
-from uuid import UUID, uuid4
+from uuid import UUID
 
-import sqlalchemy.dialects.postgresql as pg
-from sqlmodel import Column, Field, SQLModel
+from sqlmodel import Field, SQLModel
 
 month = datetime.now().month
 date_expense = datetime.now().date()
@@ -10,7 +9,7 @@ date_expense = datetime.now().date()
 
 class Expense(SQLModel, table=True):
     __tablename__ = "expenses"
-    id: UUID = Field(sa_column=Column(pg.UUID, primary_key=True, unique=True, default=uuid4))
+    id: int | None = Field(default=None, primary_key=True)
     name: str
     price_ARS: float
     price_USDT: float | None = None

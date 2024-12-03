@@ -11,4 +11,4 @@ class Products(SQLModel, table=True):
     quantity: int = 1
     price_ARS: float
     price_USDT: float | None = None
-    expense_id: UUID = Field(default=None, foreign_key="expenses.id")
+    expense_id: int = Field(default=None, foreign_key="expenses.id")

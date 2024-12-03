@@ -16,6 +16,9 @@ pyjwt = "^2.9.0"
 passlib = "^1.7.4"
 requests = "^2.32.3"
 greenlet = "^3.1.1"
+pre-commit = "^4.0.1"
+bcrypt = "^4.2.0"
+poetry-plugin-export = "^1.8.0"
 
 [tool.poetry.group.dev.dependencies]
 pydantic = "^2.9.2"

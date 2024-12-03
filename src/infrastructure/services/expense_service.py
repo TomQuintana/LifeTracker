@@ -1,15 +1,17 @@
 from src.infrastructure.services.auth import Auth
+
 from ...domain.expenses.expenses_repository import ExpenseRepository
 from ...domain.expenses.model import Expense
 from ...domain.products.model import Products
+from ...infrastructure.constants.cryptocurrency import crypto_currency_usdt
+from ...infrastructure.constants.types_expenses import EXPENSE_TYPES
 
 # from ...infrastructure.utils.alerts import bad_request
 from ...infrastructure.utils.decoed_user_id import decoded_user_id
 
 # from ...infrastructure.utils.valid_type_input import valid_type_input
 from .cotization import Cotization
-from ...infrastructure.constants.types_expenses import EXPENSE_TYPES
-from ...infrastructure.constants.cryptocurrency import crypto_currency_usdt
+
 # from ...infrastructure.utils.expenses_utils import valid_is_month_pass
 
 
@@ -66,15 +68,19 @@ class ExpenseService:
         except Exception as e:
             raise e
 
-    async def fetch_data(self, month: int, token: str):
-        print(month)
+    async def fetch_data(self, month: int, token: str, cursor: int):
         # valid_month = valid_is_month_pass(month)
         # if not valid_month:
         #     bad_request("Month is required")
 
-        user_id = decoded_user_id(token)
+        # user_id = decoded_user_id(token)
 
-        expenses = await self.repository.get_expenses_by_month(month, user_id)
+        next_expenses = 1
+        expenses_per_page = 2
+        limit = expenses_per_page + next_expenses
+
+        expenses = await self.repository.get_expenses_by_month(month, cursor, limit)
+        print(expenses)
 
         data_response = []
         for expense in expenses:
@@ -103,8 +109,13 @@ class ExpenseService:
                 }
 
             data_response.append(expenses_data)
+        next_cursor = None
 
-        return data_response
+        # NOTE: tengo un error el id cuando itero con los productos
+        if len(expenses) == limit:
+            next_cursor = expenses.pop().id
+
+        return {"data": expenses, "cursor": next_cursor}
 
     async def fetch_total(self, month: int, token):
         user_id = decoded_user_id(token)
@@ -114,13 +125,19 @@ class ExpenseService:
         # if not valid_month:
         #     bad_request("Month is required")
 
-        expenses_data = await self.repository.get_expenses_by_month(month, user_id)
-        print(expenses_data)
+        #
+        #             book_data = await self.repository.findBooks(user_id, cursor, limit)
+        #
+        #             next_cursor = None
+        #             if len(book_data) == limit:
+        #                 next_cursor = book_data.pop().id
+        #
+
+        expenses_data = await self.repository.get_all_expenses_by_month(month)
 
         totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
 
         for expense in expenses_data:
-            print(expenses_data)
             totals[expense.type] += expense.price_ARS
 
         final_totals = 0
@@ -129,5 +146,19 @@ class ExpenseService:
 
         return {
             "total": final_totals,
+            "rest": 560000 - final_totals,
             "expenses": totals,
         }
+
+    async def coutes_expenses(self):
+        try:
+            expense_result = await self.repository.cuotes()
+            return expense_result
+        except Exception as e:
+            raise e
+
+    async def delete_expense(self, id: int):
+        try:
+            await self.repository.delete_expense(id)
+        except Exception as e:
+            raise e

@@ -29,6 +29,7 @@ class Auth:
         return self.bcrypt_context.hash(password)
 
     def verify_password(self, plain_password: str, hashed_password: str):
+        print(plain_password, hashed_password)
         return self.bcrypt_context.verify(plain_password, hashed_password)
 
     def generate_token(

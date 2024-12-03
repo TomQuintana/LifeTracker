@@ -1,8 +1,8 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 
-from sqlmodel import UUID
 
 from src.domain.products.model import Products
+
 from .model import Expense
 
 
@@ -16,9 +16,21 @@ class ExpenseRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_expenses_by_month(self, month: int, user_id: UUID):
+    async def get_expenses_by_month(self, month: int, cursor: int, limit: int):
+        pass
+
+    @abstractmethod
+    async def get_all_expenses_by_month(self, month: int):
         pass
 
     @abstractmethod
     async def get_products_by_expense_id(self, expense_uuid: str):
+        pass
+
+    @abstractmethod
+    async def cuotes(self):
+        pass
+
+    @abstractmethod
+    async def delete_expense(self, id: int):
         pass

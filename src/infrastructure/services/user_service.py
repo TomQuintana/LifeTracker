@@ -5,10 +5,9 @@ from sqlmodel import select
 from src.domain.user.user_repository import UserRepository
 from src.infrastructure.utils.alerts import alert_not_found_resource
 
+from ...domain.user.model import User
 from ..services.auth import Auth
 from ..services.cotization import Cotization
-
-from ...domain.user.model import User
 
 
 class UserService:
@@ -44,8 +43,11 @@ class UserService:
         return user_exist.first()
 
     async def login(self, email: str, password: str):
+        print(password, email)
         try:
             user = await self.repository.get_user_by_email(email)
+            print("user", user)
+
             if not user:
                 alert_not_found_resource(detail="User not found")
 
@@ -64,5 +66,17 @@ class UserService:
 
             return token
 
+        except Exception as e:
+            raise e
+
+    async def update_badge(self, data):
+        try:
+            user = await self.repository.get_user_by_email(data.email)
+            if not user:
+                alert_not_found_resource(detail="User not found")
+
+            modify_badge = await self.repository.modify_badged(data.email, data.badge)
+            print("data", modify_badge)
+            return modify_badge
         except Exception as e:
             raise e

@@ -3,3 +3,4 @@
 notes.md
 __pycache__/
 .vercel
+src/vercel.json
