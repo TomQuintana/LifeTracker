@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, status
 
-from src.application.dto.user import UserSchema, UserLogin
+from src.application.dto.user import UserBadge, UserLogin, UserSchema
 
 from ..dependency.user_dependency import get_user_service
 from ..services.user_service import UserService
@@ -26,7 +26,17 @@ async def create_user(data: UserSchema, user_service: UserService = Depends(get_
 @router.post("/login")
 async def authenticate(data: UserLogin, user_service: UserService = Depends(get_user_service)):
     token_user = await user_service.login(data.email, data.password)
+    print(token_user)
     return {"token": token_user}
+
+
+@router.patch("/badge")
+async def update_badge(
+    data: UserBadge,
+    user_service: UserService = Depends(get_user_service),
+):
+    user = await user_service.update_badge(data)
+    return user
 
 
 #     user_service = UserService(session)

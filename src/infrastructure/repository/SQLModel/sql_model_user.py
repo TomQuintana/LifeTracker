@@ -14,7 +14,17 @@ class SqlModelUserRepository(UserRepository):
         await self.session.commit()
         return user_created
 
-    async def get_user_by_email(self, email: str) -> User:
+    async def get_user_by_email(self, email: str):
         query = select(User).where(User.email == email)
         user_result = await self.session.exec(query)
         return user_result.first()
+
+    # FIX: modify_badged
+    async def modify_badged(self, email: str, badge: float):
+        query = select(User).where(User.email == email)
+        user = await self.session.exec(query)
+        print(user.first())
+        user.first().budget_ARS = badge
+        user.budget_ARS = badge
+        await self.session.commit()
+        return user

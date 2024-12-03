@@ -14,3 +14,8 @@ class UserSchema(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+
+class UserBadge(BaseModel):
+    email: str
+    badge: float

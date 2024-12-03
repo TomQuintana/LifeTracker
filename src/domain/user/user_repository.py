@@ -1,4 +1,4 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 
 from .model import User
 
@@ -9,5 +9,9 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_user_by_email(self, email: str) -> User:
+    async def get_user_by_email(self, email: str):
+        pass
+
+    @abstractmethod
+    async def modify_badged(self, email: str, badge: float) -> User:
         pass
