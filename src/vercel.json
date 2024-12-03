@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-        "src": "src/main/app.py",
+      "src": "src/main.py",
       "use": "@vercel/python",
       "config": {
         "installCommand": "curl -sSL https://install.python-poetry.org | python3 - && poetry install --no-dev"
