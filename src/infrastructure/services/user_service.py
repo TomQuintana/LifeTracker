@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from sqlmodel import select
 
 from src.domain.user.user_repository import UserRepository
 from src.infrastructure.utils.alerts import alert_not_found_resource
@@ -35,15 +34,18 @@ class UserService:
             raise e
 
     def fetch_user(self, email: str):
-        return self.repository.get_user_by_email(email)
+        try:
+            return self.repository.get_user_by_email(email)
+        except Exception as e:
+            print(e)
+            raise e
 
-    async def _search_user_by_email(self, email_user: str):
-        query = select(User).where(User.email == email_user)
-        user_exist = await self.sesion.exec(query)
-        return user_exist.first()
+    # async def _search_user_by_email(self, email_user: str):
+    #     query = select(User).where(User.email == email_user)
+    #     user_exist = await self.sesion.exec(query)
+    #     return user_exist.first()
 
     async def login(self, email: str, password: str):
-        print(password, email)
         try:
             user = await self.repository.get_user_by_email(email)
             print("user", user)
@@ -63,10 +65,12 @@ class UserService:
                 user_id_str,
                 access_token_expires,
             )
+            print("token", token)
 
             return token
 
         except Exception as e:
+            print(e)
             raise e
 
     async def update_badge(self, data):
