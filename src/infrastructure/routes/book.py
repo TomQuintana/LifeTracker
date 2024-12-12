@@ -42,12 +42,21 @@ async def get_books_types(book_service: BookService = Depends(get_book_service))
     return {"book Topic": list_types}
 
 
-@router.get("/filter", status_code=status.HTTP_200_OK)
+@router.get("/filter/topic", status_code=status.HTTP_200_OK)
 async def get_books_by_type(
-    type: str = Query(None, description="The month for filtering expenses"),
+    type: str = Query(None, description="Book type by topic"),
     book_service: BookService = Depends(get_book_service),
 ):
-    books = await book_service.get_books_by_filter(type)
+    books = await book_service.get_books_by_topic(type)
+    return books
+
+
+@router.get("/filter/status", status_code=status.HTTP_200_OK)
+async def get_books_by_status(
+    type: str = Query(None, description="Book type status - unread, reading, read"),
+    book_service: BookService = Depends(get_book_service),
+):
+    books = await book_service.get_books_by_status(type)
     return books
 
 
@@ -61,7 +70,6 @@ async def delete_books_by_uuid(id: int, book_service: BookService = Depends(get_
 async def update_books_by_uuid(
     uuid: str, data: BookToUpdate, book_service: BookService = Depends(get_book_service)
 ):
-    # book_service = BookService(session)
     await book_service.update_books_by_uuid(uuid, data)
     return {"message": "Book updated successfully"}
 

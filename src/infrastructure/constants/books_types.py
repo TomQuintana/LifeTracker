@@ -7,4 +7,5 @@ BOOKS_TYPES = [
     "python",
     "business",
     "bibliography",
+    "company",
 ]

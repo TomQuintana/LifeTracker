@@ -50,9 +50,12 @@ class SqlModelBookRepository(BookRepository):
         result = await self.session.exec(query)
         return result.all()
 
+    async def filter_books_by_status(self, books_status: str):
+        query = select(Book).where(books_status == Book.status)
+        result = await self.session.exec(query)
+        return result.all()
+
     async def searchBook(self, book_title: str):
-        # query = select(Book).where(Book.title == book_title)
         query = select(Book).filter(like_op(Book.title, f"%{book_title}%"))
-        # query = select(Book).where(Book.title.like(f"%{book_title}%"))
         result = await self.session.exec(query)
         return result.all()

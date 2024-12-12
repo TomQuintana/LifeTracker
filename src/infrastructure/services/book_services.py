@@ -64,13 +64,23 @@ class BookService:
 
         return {"data": book_data, "cursor": next_cursor}
 
-    async def get_books_by_filter(self, type: str):
-        print(type)
+    async def get_books_by_topic(self, topic: str):
         try:
-            book_data = await self.repository.filterBooks(type)
+            book_data = await self.repository.filterBooks(topic)
 
-            if book_data is None:
-                alert_not_found_resource("Book not found")
+            if len(book_data) == 0:
+                alert_not_found_resource(f"Topic: {topic} not found")
+
+            return book_data
+        except Exception as e:
+            raise e
+
+    async def get_books_by_status(self, status: str):
+        try:
+            book_data = await self.repository.filter_books_by_status(status)
+
+            if len(book_data) == 0:
+                alert_not_found_resource(f"Dont Book found with this status: {status}")
 
             return book_data
         except Exception as e:
