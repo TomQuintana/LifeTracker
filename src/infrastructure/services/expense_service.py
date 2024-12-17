@@ -76,11 +76,13 @@ class ExpenseService:
         # user_id = decoded_user_id(token)
 
         next_expenses = 1
-        expenses_per_page = 2
+        expenses_per_page = 8
         limit = expenses_per_page + next_expenses
 
         expenses = await self.repository.get_expenses_by_month(month, cursor, limit)
-        print(expenses)
+
+        if expenses is None:
+            raise ValueError("No se pudieron obtener los gastos")
 
         data_response = []
         for expense in expenses:
@@ -118,9 +120,7 @@ class ExpenseService:
         return {"data": expenses, "cursor": next_cursor}
 
     async def fetch_total(self, month: int, token):
-        user_id = decoded_user_id(token)
-        print(user_id)
-
+        # user_id = decoded_user_id(token)
         # valid_month = valid_is_month_pass(month)
         # if not valid_month:
         #     bad_request("Month is required")
