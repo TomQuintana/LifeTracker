@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-
 from src.domain.user.user_repository import UserRepository
 from src.infrastructure.utils.alerts import alert_not_found_resource
 
@@ -37,7 +36,6 @@ class UserService:
         try:
             return self.repository.get_user_by_email(email)
         except Exception as e:
-            print(e)
             raise e
 
     # async def _search_user_by_email(self, email_user: str):
@@ -48,8 +46,6 @@ class UserService:
     async def login(self, email: str, password: str):
         try:
             user = await self.repository.get_user_by_email(email)
-            print("user", user)
-
             if not user:
                 alert_not_found_resource(detail="User not found")
 
@@ -65,8 +61,6 @@ class UserService:
                 user_id_str,
                 access_token_expires,
             )
-            print("token", token)
-
             return token
 
         except Exception as e:
@@ -80,7 +74,6 @@ class UserService:
                 alert_not_found_resource(detail="User not found")
 
             modify_badge = await self.repository.modify_badged(data.email, data.badge)
-            print("data", modify_badge)
             return modify_badge
         except Exception as e:
             raise e
