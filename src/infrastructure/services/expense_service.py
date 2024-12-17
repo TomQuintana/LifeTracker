@@ -133,22 +133,27 @@ class ExpenseService:
         #                 next_cursor = book_data.pop().id
         #
 
-        expenses_data = await self.repository.get_all_expenses_by_month(month)
+        try:
+            expenses_data = await self.repository.get_all_expenses_by_month(month)
 
-        totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
+            totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
 
-        for expense in expenses_data:
-            totals[expense.type] += expense.price_ARS
+            for expense in expenses_data:
+                totals[expense.type] += expense.price_ARS
 
-        final_totals = 0
-        for key, value in totals.items():
-            final_totals += value
+            final_totals = 0
+            for key, value in totals.items():
+                final_totals += value
 
-        return {
-            "total": final_totals,
-            "rest": 560000 - final_totals,
-            "expenses": totals,
-        }
+            return {
+                "total": final_totals,
+                "rest": 560000 - final_totals,
+                "expenses": totals,
+            }
+
+        except Exception as e:
+            print(e)
+            raise e
 
     async def coutes_expenses(self):
         try:
