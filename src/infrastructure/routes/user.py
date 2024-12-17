@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, status
 
-from src.application.dto.user import UserBadge, UserLogin, UserSchema
+from src.application.dto.user import UserBadge, UserLogin
 
 from ..dependency.user_dependency import get_user_service
 from ..services.user_service import UserService
@@ -17,13 +17,15 @@ async def get_user(
     return user
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_user(data: UserSchema, user_service: UserService = Depends(get_user_service)):
-    user = await user_service.create_user(data)
-    return user
+# @router.post("/", status_code=status.HTTP_201_CREATED)
+# async def create_user(
+#     data: UserSchema, user_service: UserService = Depends(get_user_service)
+# ):
+#     user = await user_service.create_user(data)
+#     return user
 
 
-@router.post("/login")
+@router.post("/login", status_code=status.HTTP_200_OK)
 async def authenticate(data: UserLogin, user_service: UserService = Depends(get_user_service)):
     token_user = await user_service.login(data.email, data.password)
     print(token_user)
