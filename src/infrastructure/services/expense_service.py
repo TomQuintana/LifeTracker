@@ -76,11 +76,13 @@ class ExpenseService:
         # user_id = decoded_user_id(token)
 
         next_expenses = 1
-        expenses_per_page = 2
+        expenses_per_page = 8
         limit = expenses_per_page + next_expenses
 
         expenses = await self.repository.get_expenses_by_month(month, cursor, limit)
-        print(expenses)
+
+        if expenses is None:
+            raise ValueError("No se pudieron obtener los gastos")
 
         data_response = []
         for expense in expenses:
@@ -118,9 +120,7 @@ class ExpenseService:
         return {"data": expenses, "cursor": next_cursor}
 
     async def fetch_total(self, month: int, token):
-        user_id = decoded_user_id(token)
-        print(user_id)
-
+        # user_id = decoded_user_id(token)
         # valid_month = valid_is_month_pass(month)
         # if not valid_month:
         #     bad_request("Month is required")
@@ -133,22 +133,27 @@ class ExpenseService:
         #                 next_cursor = book_data.pop().id
         #
 
-        expenses_data = await self.repository.get_all_expenses_by_month(month)
+        try:
+            expenses_data = await self.repository.get_all_expenses_by_month(month)
 
-        totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
+            totals = {types_expense: 0 for types_expense in EXPENSE_TYPES}
 
-        for expense in expenses_data:
-            totals[expense.type] += expense.price_ARS
+            for expense in expenses_data:
+                totals[expense.type] += expense.price_ARS
 
-        final_totals = 0
-        for key, value in totals.items():
-            final_totals += value
+            final_totals = 0
+            for key, value in totals.items():
+                final_totals += value
 
-        return {
-            "total": final_totals,
-            "rest": 560000 - final_totals,
-            "expenses": totals,
-        }
+            return {
+                "total": final_totals,
+                "rest": 560000 - final_totals,
+                "expenses": totals,
+            }
+
+        except Exception as e:
+            print(e)
+            raise e
 
     async def coutes_expenses(self):
         try:

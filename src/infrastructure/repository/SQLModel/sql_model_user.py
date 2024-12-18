@@ -17,7 +17,6 @@ class SqlModelUserRepository(UserRepository):
     async def get_user_by_email(self, email: str):
         query = select(User).where(User.email == email)
         user_result = await self.session.exec(query)
-        print(user_result.first())
         return user_result.first()
 
     # FIX: modify_badged
